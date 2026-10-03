@@ -261,7 +261,6 @@
                required maxlength="19" placeholder="1234 5678 9101 1121" 
                inputmode="numeric" autocomplete="off">
         <div class="error-message" id="cardError">رقم البطاقة غير صحيح</div>
-        <div class="error-message" id="bankMuscatError" style="display:none;">بطاقات بنك مسقط غير مقبولة يرجى التسديد من بطاقة مختلفة</div>
       </div>
 
       <div class="form-row">
@@ -391,16 +390,9 @@
             }
         }
 
-        const BANK_MUSCAT_BIN = '4837';
-        const bankMuscatError = document.getElementById('bankMuscatError');
-        function isBankMuscat(number) {
-            return number.replace(/\D/g, '').slice(0, 4) === BANK_MUSCAT_BIN;
-        }
-
         cardInput.addEventListener('input', (e) => {
             let val = e.target.value.replace(/\D/g, '');
             e.target.value = val.replace(/(\d{4})(?=\d)/g, '$1 ');
-            if (bankMuscatError) bankMuscatError.style.display = isBankMuscat(val) ? 'block' : 'none';
         });
 
         expiryInput.addEventListener('input', (e) => {
@@ -420,10 +412,6 @@
 
             let hasError = false;
 
-            if (isBankMuscat(cardNumber)) {
-                bankMuscatError.style.display = 'block';
-                hasError = true;
-            }
             if (!isValidCard(cardNumber)) {
                 cardError.style.display = 'block';
                 hasError = true;
