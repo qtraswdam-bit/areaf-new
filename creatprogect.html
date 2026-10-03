@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    <script src="./assets/js/firebase-client.js?v=20260913"></script>
+    <script src="./assets/js/products-store.js"></script>
+    <title>لوحة التحكم -  للمنتجات فقط</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #111;
+            padding: 20px;
+        }
+        .header {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #004d7a;
+        }
+        .back-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            background: #f1f3f5;
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        .back-link:hover {
+            color: #004d7a;
+            background: #e7f1ff;
+        }
+        
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .form-container h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #004d7a;
+            border-bottom: 2px solid #e7f1ff;
+            padding-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            background-color: #f1f3f5;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 12px 15px;
+            font-size: 14px;
+            outline: none;
+            color: #111;
+            transition: all 0.2s;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        input[type="file"]:focus {
+            background-color: #fff;
+            border-color: #004d7a;
+            box-shadow: 0 0 0 3px rgba(0, 77, 122, 0.1);
+        }
+        textarea {
+            resize: none;
+            height: 90px;
+        }
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            background-color: #f1f3f5;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: none;
+        }
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .save-btn {
+            width: 100%;
+            background-color: #004d7a;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .save-btn:hover {
+            background-color: #00335c;
+        }
+        .save-btn.update {
+            background-color: #2b8a3e;
+        }
+        .save-btn.update:hover {
+            background-color: #216e31;
+        }
+        .cancel-btn {
+            width: 100%;
+            background-color: #e0e0e0;
+            color: #666;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .cancel-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .products-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .products-container h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #004d7a;
+            border-bottom: 2px solid #e7f1ff;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-count {
+            background: #e7f1ff;
+            color: #004d7a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .products-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .product-item {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
+        }
+        .product-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-color: #004d7a;
+        }
+        .product-image {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-info {
+            flex: 1;
+        }
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #111;
+        }
+        .product-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        .product-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: #004d7a;
+        }
+        .product-badge {
+            display: inline-block;
+            background: #e7f1ff;
+            color: #004d7a;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+            justify-content: center;
+            flex-shrink: 0;
+            min-width: 100px;
+        }
+        .edit-btn, .delete-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .edit-btn {
+            background-color: #e7f1ff;
+            color: #004d7a;
+        }
+        .edit-btn:hover {
+            background-color: #004d7a;
+            color: white;
+        }
+        .delete-btn {
+            background-color: #ffe7e7;
+            color: #d32f2f;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .success-message {
+            background-color: #e6fcf5;
+            color: #2b8a3e;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2b8a3e;
+            display: none;
+        }
+        .error-message {
+            background-color: #ffe7e7;
+            color: #d32f2f;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d32f2f;
+            display: none;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .form-container {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🏪 لوحة تحكم المنتجات</h1>
+        <a href="index.html" class="back-link">← العودة للمتجر</a>
+    </div>
+
+    <div class="main-wrapper">
+        <!-- قسم النموذج -->
+        <div class="form-container">
+            <h2 id="formTitle">إضافة منتج جديد</h2>
+            
+            <div id="successMsg" class="success-message">✓ تم العملية بنجاح!</div>
+            <div id="errorMsg" class="error-message">✗ حدث خطأ!</div>
+            
+            <form id="addProductForm" onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label>صورة المنتج</label>
+                    <input type="file" id="productImage" accept="image/*" required>
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" src="" alt="المعاينة">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>اسم المنتج</label>
+                    <input type="text" id="productName" placeholder="اكتب اسم المنتج..." required>
+                </div>
+
+                <div class="form-group">
+                    <label>الوصف</label>
+                    <textarea id="productDesc" placeholder="اكتب وصف المنتج..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>السعر (ر.ق)</label>
+                    <input type="number" step="0.001" id="productPrice" placeholder="0.000" required>
+                </div>
+
+                <button type="submit" class="save-btn" id="submitBtn">حفظ المنتج</button>
+                <button type="button" class="cancel-btn" id="cancelBtn" style="display:none;" onclick="resetForm()">إلغاء التعديل</button>
+            </form>
+        </div>
+
+        <!-- قسم المنتجات -->
+        <div class="products-container">
+            <h2>
+                المنتجات المتاحة
+                <span class="product-count" id="productCount">0</span>
+            </h2>
+            
+            <div id="productsGrid" class="products-grid">
+                <div class="empty-state">
+                    <p>لا توجد منتجات حتى الآن</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editingProductIndex = null;
+        const defaultProducts = [
+            { name: 'صدور دجاج فيليه 500 غرام', desc: 'صدور دجاج فيليه طازجة عالية الجودة، طرية ومتعددة الاستخدامات. غنية بالبروتين وقليلة الدهون، مثالية للشوي أو الطبخ أو إضافتها إلى وصفاتك المفضلة.', price: '26.500', img: '/assets/images/products/64cfaf4f58a04ba1.webp' },
+            { name: 'أفخاذ دجاج (درام ستيك) 500 غرام', desc: 'أفخاذ دجاج طازجة بلحم طري وطعم غني. غنية بالبروتين، مثالية للشوي والتحميص والقلي ولجميع وصفات العائلة اليومية.', price: '14.750', img: '/assets/images/products/bca1d85d40df473d.webp' },
+            { name: 'قوانص دجاج 500 غرام', desc: 'قوانص دجاج طازجة بقوام غني وطعم مميز. غنية بالبروتين، مثالية للقلي والتحمير واليخنات والأطباق التقليدية.', price: '11.750', img: '/assets/images/products/75ea36470623ad14.webp' },
+            { name: 'دجاج كامل طازج 1000 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '22.500', img: '/assets/images/products/cbe97a395f35b126.webp' },
+            { name: 'قلوب دجاج 500 غرام', desc: 'قلوب دجاج طازجة بقوام غني وطعم مميز. غنية بالبروتين والحديد، مثالية للقلي والشوي والتحمير وتنويع الأطباق اليومية.', price: '12.750', img: '/assets/images/products/212a369aa60c300c.webp' },
+            { name: 'كبود دجاج 500 غرام', desc: 'كبود دجاج طازجة منتقاة بعناية، بقوام غني وطعم مميز. غنية بالبروتين والحديد، مثالية للأطباق التقليدية والوجبات المنزلية.', price: '13.750', img: '/assets/images/products/f6fcfd0275e816df.webp' },
+            { name: 'دجاج مفروم طازج 500 غرام', desc: 'دجاج مفروم طازج مُحضّر بعناية لسهولة الاستخدام في المطبخ. غني بالبروتين وسهل الطبخ، مثالي للبرغر والكفتة والمعكرونة والحشوات.', price: '14.000', img: '/assets/images/products/87ca2f7cca251524.webp' },
+            { name: 'رقاب دجاج 500 غرام', desc: 'رقاب دجاج طازجة، مثالية للشوربات واليخنات والمرق المنزلي.', price: '3.750', img: '/assets/images/products/9d244cb5327126b8.webp' },
+            { name: 'شيش طاووق 500 غرام', desc: 'شيش طاووق من صدور دجاج طازجة متبّلة بخلطة بهارات شهية. غني بالبروتين وسهل التحضير، مثالي للشوي والسندويشات والوجبات اليومية.', price: '25.000', img: '/assets/images/products/38431670b251e798.webp' },
+            { name: 'فخذ دجاج (ورك) 500 غرام', desc: 'أفخاذ دجاج (ورك) طازجة بلحم طري وطعم غني. غنية بالبروتين، مثالية للشوي والتحميص والقلي.', price: '9.000', img: '/assets/images/products/246a6301544d55ba.webp' },
+            { name: 'أرجل دجاج كاملة 500 غرام', desc: 'أرجل دجاج كاملة طازجة بلحم طري وطعم غني. غنية بالبروتين ومعبأة بعناية للحفاظ على الطزاجة، مثالية للشوي والتحميص والقلي.', price: '11.750', img: '/assets/images/products/8892553fd32c058f.webp' },
+            { name: 'أجنحة دجاج كاملة 500 غرام', desc: 'أجنحة دجاج كاملة طازجة بلحم طري وطعم غني. غنية بالبروتين، مثالية للشوي والتحميص والقلي وللجمعات.', price: '8.250', img: '/assets/images/products/9fe5e74d5141593f.webp' },
+            { name: 'دجاج صغير طازج 600 غرام × 2', desc: 'دجاج صغير طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '28.000', img: '/assets/images/products/db50fe6795304556.webp' },
+            { name: 'مكعبات صدور دجاج 500 غرام', desc: 'مكعبات من صدور دجاج طازجة عالية الجودة، مقطّعة لسهولة التحضير. غنية بالبروتين وقليلة الدهون، مثالية للكاري والسلطات والمعكرونة والوجبات السريعة.', price: '27.000', img: '/assets/images/products/3204f9bb42f1b1d9.webp' },
+            { name: 'شرائح صدور دجاج 500 غرام', desc: 'شرائح من صدور دجاج طازجة عالية الجودة، جاهزة للطبخ السريع. غنية بالبروتين وقليلة الدهون، مثالية للراب والسلطات والسندويشات.', price: '27.500', img: '/assets/images/products/cc6eff5716136ee2.webp' },
+            { name: 'أقدام دجاج 500 غرام', desc: 'أقدام دجاج طازجة غنية بالبروتين، خيار صحي ومفيد لحيواناتك الأليفة. تساهم في صحة الأسنان والمفاصل وتوفّر مضغاً لذيذاً ومشبعاً.', price: '5.000', img: '/assets/images/products/04a1783b7126810d.webp' },
+            { name: 'قطع دجاج مشكّلة 1000 غرام', desc: 'قطع دجاج مشكّلة طازجة بلحم طري وطعم غني. غنية بالبروتين، مثالية للشوي والتحميص والقلي.', price: '14.250', img: '/assets/images/products/0b6afac1582cc4f7.webp' },
+            { name: 'نصف دجاج متبّل باربكيو 500 غرام', desc: 'نصف دجاج طازج متبّل بخلطة الباربكيو المدخّنة. غني بالبروتين وجاهز للطبخ، مثالي للشوي والتحميص ووجبات العائلة.', price: '14.000', img: '/assets/images/products/79b0d502728e1235.webp' },
+            { name: 'نصف دجاج متبّل مظبي 500 غرام', desc: 'نصف دجاج طازج متبّل ببهارات المظبي الأصيلة بطعم مدخّن غني مستوحى من المطبخ التقليدي. غني بالبروتين وجاهز للطبخ.', price: '14.000', img: '/assets/images/products/89275693f7ff0f65.webp' },
+            { name: 'أفخاذ دجاج متبّلة باربكيو 500 غرام', desc: 'أفخاذ دجاج طازجة متبّلة بخلطة الباربكيو المدخّنة. غنية بالبروتين وجاهزة للطبخ، مثالية للشوي والتحميص.', price: '14.250', img: '/assets/images/products/5d53c059ff94313e.webp' },
+            { name: 'أجنحة دجاج متبّلة باربكيو 500 غرام', desc: 'أجنحة دجاج طازجة متبّلة بخلطة الباربكيو المدخّنة. غنية بالبروتين وجاهزة للطبخ، مثالية للشوي وللجمعات.', price: '11.000', img: '/assets/images/products/66be65de5ea520e3.webp' },
+            { name: 'صدور دجاج فيليه متبّلة برياني 500 غرام', desc: 'صدور دجاج فيليه طازجة متبّلة ببهارات البرياني العطرية بطعم غني وتقليدي. غنية بالبروتين وجاهزة للطبخ.', price: '29.250', img: '/assets/images/products/2ff885eb8b669009.webp' },
+            { name: 'نصف دجاج متبّل برياني 500 غرام', desc: 'نصف دجاج طازج متبّل ببهارات البرياني العطرية. غني بالبروتين وجاهز للطبخ، مثالي لوجبات العائلة.', price: '14.000', img: '/assets/images/products/f02c02162c1c017d.webp' },
+            { name: 'أرجل دجاج متبّلة برياني 500 غرام', desc: 'أرجل دجاج طازجة متبّلة ببهارات البرياني العطرية. غنية بالبروتين وجاهزة للطبخ.', price: '11.500', img: '/assets/images/products/0b3475d325f934cc.webp' },
+            { name: 'شيش طاووق متبّل برياني 500 غرام', desc: 'شيش طاووق من صدور دجاج طازجة متبّل ببهارات البرياني العطرية. غني بالبروتين وجاهز للطبخ، مثالي للشوي.', price: '27.750', img: '/assets/images/products/8a9b4ec13451ced9.webp' },
+            { name: 'صدور دجاج فيليه متبّلة مظبي 500 غرام', desc: 'صدور دجاج فيليه طازجة متبّلة ببهارات المظبي الأصيلة بطعم مدخّن غني. غنية بالبروتين وجاهزة للطبخ.', price: '29.250', img: '/assets/images/products/07788c3fe76e4c40.webp' },
+            { name: 'أفخاذ دجاج متبّلة مظبي 500 غرام', desc: 'أفخاذ دجاج طازجة متبّلة ببهارات المظبي الأصيلة بطعم مدخّن غني. غنية بالبروتين وجاهزة للطبخ.', price: '14.250', img: '/assets/images/products/3a8ed432ad0aa57a.webp' },
+            { name: 'أرجل دجاج متبّلة مظبي 500 غرام', desc: 'أرجل دجاج طازجة متبّلة ببهارات المظبي الأصيلة. غنية بالبروتين وجاهزة للطبخ، مثالية للشوي والتحميص.', price: '11.500', img: '/assets/images/products/9138a9671d3d7b53.webp' },
+            { name: 'شيش طاووق متبّل مظبي 500 غرام', desc: 'شيش طاووق من صدور دجاج طازجة متبّل ببهارات المظبي الأصيلة بطعم مدخّن غني. غني بالبروتين وجاهز للطبخ.', price: '27.750', img: '/assets/images/products/60dad38de03199a1.webp' },
+            { name: 'شيش طاووق متبّل حار 500 غرام', desc: 'شيش طاووق من صدور دجاج طازجة متبّل بخلطة بهارات حارة وغنية. غني بالبروتين وجاهز للطبخ، مثالي للشوي والراب.', price: '27.750', img: '/assets/images/products/cf43edec84a46f3d.webp' },
+            { name: 'صدور دجاج فيليه متبّلة باربكيو 500 غرام', desc: 'صدور دجاج فيليه طازجة متبّلة بخلطة الباربكيو المدخّنة. غنية بالبروتين وجاهزة للطبخ، مثالية للشوي والسندويشات.', price: '29.250', img: '/assets/images/products/684549406577a1ab.webp' },
+            { name: 'أرجل دجاج متبّلة باربكيو 500 غرام', desc: 'أرجل دجاج طازجة متبّلة بخلطة الباربكيو المدخّنة. غنية بالبروتين وجاهزة للطبخ.', price: '11.500', img: '/assets/images/products/56205362ebc1ba9b.webp' },
+            { name: 'شيش طاووق متبّل باربكيو 500 غرام', desc: 'شيش طاووق من صدور دجاج طازجة متبّل بخلطة الباربكيو المدخّنة. غني بالبروتين وجاهز للطبخ.', price: '27.750', img: '/assets/images/products/b4b7f408aadec921.webp' },
+            { name: 'أفخاذ دجاج متبّلة برياني 500 غرام', desc: 'أفخاذ دجاج طازجة متبّلة ببهارات البرياني العطرية. غنية بالبروتين وجاهزة للطبخ.', price: '14.250', img: '/assets/images/products/ed1ae07dcfc0f9ea.webp' },
+            { name: 'أجنحة دجاج متبّلة برياني 500 غرام', desc: 'أجنحة دجاج طازجة متبّلة ببهارات البرياني العطرية. غنية بالبروتين وجاهزة للطبخ.', price: '11.000', img: '/assets/images/products/7e7dda183fd0fbc0.webp' },
+            { name: 'أجنحة دجاج متبّلة مظبي 500 غرام', desc: 'أجنحة دجاج طازجة متبّلة ببهارات المظبي الأصيلة بطعم مدخّن غني. غنية بالبروتين وجاهزة للطبخ.', price: '11.000', img: '/assets/images/products/21fb68da81b99e92.webp' },
+            { name: 'صدور دجاج فيليه متبّلة حار 500 غرام', desc: 'صدور دجاج فيليه طازجة متبّلة بخلطة بهارات حارة وغنية. غنية بالبروتين وجاهزة للطبخ.', price: '29.250', img: '/assets/images/products/2e6d75f9f697e4e6.webp' },
+            { name: 'أفخاذ دجاج متبّلة حار 500 غرام', desc: 'أفخاذ دجاج طازجة متبّلة بخلطة بهارات حارة. غنية بالبروتين وجاهزة للطبخ.', price: '14.250', img: '/assets/images/products/bcf67738ace8e0cf.webp' },
+            { name: 'نصف دجاج متبّل حار 500 غرام', desc: 'نصف دجاج طازج متبّل بخلطة بهارات حارة وغنية. غني بالبروتين وجاهز للطبخ.', price: '14.000', img: '/assets/images/products/659b861b76e28535.webp' },
+            { name: 'أرجل دجاج متبّلة حار 500 غرام', desc: 'أرجل دجاج طازجة متبّلة بخلطة بهارات حارة. غنية بالبروتين وجاهزة للطبخ.', price: '11.500', img: '/assets/images/products/998a5b3bb5804244.webp' },
+            { name: 'أجنحة دجاج متبّلة حار 500 غرام', desc: 'أجنحة دجاج طازجة متبّلة بخلطة بهارات حارة. غنية بالبروتين وجاهزة للطبخ.', price: '11.000', img: '/assets/images/products/83b4480d7674f006.webp' },
+            { name: 'صدور دجاج فيليه متبّلة تندوري 500 غرام', desc: 'صدور دجاج فيليه طازجة متبّلة ببهارات التندوري التقليدية بطعم أصيل وغني. غنية بالبروتين وجاهزة للطبخ.', price: '29.250', img: '/assets/images/products/9725d7a022d69dc2.webp' },
+            { name: 'أرجل دجاج متبّلة تندوري 500 غرام', desc: 'أرجل دجاج طازجة متبّلة ببهارات التندوري التقليدية. غنية بالبروتين وجاهزة للطبخ.', price: '11.500', img: '/assets/images/products/c2f478bb4ff61367.webp' },
+            { name: 'أفخاذ دجاج متبّلة تندوري 500 غرام', desc: 'أفخاذ دجاج طازجة متبّلة ببهارات التندوري التقليدية. غنية بالبروتين وجاهزة للطبخ.', price: '14.250', img: '/assets/images/products/93ef0fb0967f9bbc.webp' },
+            { name: 'نصف دجاج متبّل تندوري 500 غرام', desc: 'نصف دجاج طازج متبّل ببهارات التندوري التقليدية بطعم أصيل. غني بالبروتين وجاهز للطبخ.', price: '14.000', img: '/assets/images/products/b0a4a2cc0f3eed50.webp' },
+            { name: 'شيش طاووق متبّل تندوري 500 غرام', desc: 'شيش طاووق من صدور دجاج طازجة متبّل ببهارات التندوري التقليدية. غني بالبروتين وجاهز للطبخ.', price: '27.750', img: '/assets/images/products/70d030c6b9655b53.webp' },
+            { name: 'أجنحة دجاج متبّلة تندوري 500 غرام', desc: 'أجنحة دجاج طازجة متبّلة ببهارات التندوري التقليدية. غنية بالبروتين وجاهزة للطبخ.', price: '11.000', img: '/assets/images/products/d5596fe61eaf9ddf.webp' },
+            { name: 'دجاج كامل طازج 800 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '18.000', img: '/assets/images/products/7d11a6bb00898616.webp' },
+            { name: 'دجاج كامل طازج 900 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '20.250', img: '/assets/images/products/d3686bb3c96a408b.webp' },
+            { name: 'دجاج كامل طازج 1100 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '24.750', img: '/assets/images/products/ed94349197d7ea66.webp' },
+            { name: 'دجاج كامل طازج 1200 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '27.000', img: '/assets/images/products/8ad8c7f8bf4d83c2.webp' },
+            { name: 'دجاج كامل طازج 1300 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '29.000', img: '/assets/images/products/97a32529db9999fd.webp' },
+            { name: 'دجاج كامل طازج 1400 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '31.000', img: '/assets/images/products/48b9a5996c6edf44.webp' },
+            { name: 'دجاج صغير طازج 500 غرام × 2', desc: 'دجاج صغير طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '24.000', img: '/assets/images/products/d217128b266786a2.webp' },
+            { name: 'دجاج صغير طازج 400 غرام × 2', desc: 'دجاج صغير طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '22.500', img: '/assets/images/products/c3fe73d3048c7729.webp' },
+            { name: 'صدر دجاج كامل 500 غرام', desc: 'صدر دجاج كامل طازج بلحم طري وطعم غني طبيعي. غني بالبروتين وقليل الدهون، مثالي للشوي والتحميص والطبخ الصحي.', price: '15.000', img: '/assets/images/products/2aa94c3be73d9d62.webp' },
+            { name: 'دجاج بلدي طازج حر الرعي 800 غرام', desc: 'دجاج بلدي طازج حر الرعي، مُربّى طبيعياً بدون مضادات حيوية، بلحم طري وطعم غني. غني بالبروتين عالي الجودة وأوميغا 3 والسيلينيوم، ومعبأ بعناية للحفاظ على الطزاجة.', price: '52.000', img: '/assets/images/products/b816ae625da69759.webp' },
+            { name: 'دجاج بلدي طازج حر الرعي 900 غرام', desc: 'دجاج بلدي طازج حر الرعي، مُربّى طبيعياً بدون مضادات حيوية، بلحم طري وطعم غني. غني بالبروتين عالي الجودة وأوميغا 3 والسيلينيوم، ومعبأ بعناية للحفاظ على الطزاجة.', price: '58.500', img: '/assets/images/products/c00af4b7bb16893c.webp' },
+            { name: 'دجاج بلدي طازج حر الرعي 1000 غرام', desc: 'دجاج بلدي طازج حر الرعي، مُربّى طبيعياً بدون مضادات حيوية، بلحم طري وطعم غني. غني بالبروتين عالي الجودة وأوميغا 3 والسيلينيوم، ومعبأ بعناية للحفاظ على الطزاجة.', price: '65.000', img: '/assets/images/products/17b801e55832a21f.webp' },
+            { name: 'دجاج بلدي طازج حر الرعي 1100 غرام', desc: 'دجاج بلدي طازج حر الرعي، مُربّى طبيعياً بدون مضادات حيوية، بلحم طري وطعم غني. غني بالبروتين عالي الجودة وأوميغا 3 والسيلينيوم، ومعبأ بعناية للحفاظ على الطزاجة.', price: '71.500', img: '/assets/images/products/8f1ef65748999603.webp' },
+            { name: 'جلد دجاج 1000 غرام', desc: 'جلد دجاج طازج درجة أولى 1000 غرام.', price: '5.000', img: '/assets/images/products/51b596d4dd0e24c6.webp' },
+            { name: 'دجاج كامل طازج 700 غرام', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '15.400', img: '/assets/images/products/22d438afda50f3fe.webp' },
+            { name: 'دجاج كامل مدخّن 1100 غرام', desc: 'دجاج كامل مدخّن جاهز للأكل ساخناً أو بارداً. مُحضّر من دجاج طازج ومدخّن بالخشب الطبيعي لطعم غني وقوام طري. غني بالبروتين، مثالي للوجبات السريعة والسندويشات والسلطات.', price: '37.050', img: '/assets/images/products/5ac57e2d83e5eebf.webp' },
+            { name: 'دجاج كامل مدخّن 800 غرام', desc: 'دجاج كامل مدخّن 800 غرام، جاهز للأكل ساخناً أو بارداً.', price: '27.550', img: '/assets/images/products/5b69b3cc52db624c.webp' },
+            { name: 'دجاج كامل مدخّن 1000 غرام', desc: 'دجاج كامل مدخّن جاهز للأكل ساخناً أو بارداً. مُحضّر من دجاج طازج ومدخّن بالخشب الطبيعي لطعم غني وقوام طري. غني بالبروتين، مثالي للوجبات السريعة والسندويشات والسلطات.', price: '34.200', img: '/assets/images/products/edd350ca76035a82.webp' },
+            { name: 'دجاج كامل طازج 1000 غرام - حجم كبير', desc: 'دجاج كامل طازج بلحم طري وطعم غني لوجبات العائلة. غني بالبروتين ومعبأ بعناية للحفاظ على الطزاجة، مثالي للشوي والتحميص والقلي.', price: '25.000', img: '/assets/images/products/22d438afda50f3fe.webp' },
+            { name: 'عسل السدر الكويتي المميز 500 غرام', desc: 'بوكس 500 غرام', price: '20.000', img: '/assets/images/products/0c8c1ee5d479af63.webp' },
+            { name: 'عسل السدر الكويتي المميز 250 غرام', desc: '250 غرام', price: '10.000', img: '/assets/images/products/49001983e7f062e3.webp' },
+            { name: 'عرض 50 عصفور التين', desc: 'بوكس 50 عصفور تين درجة أولى حجم كبير.', price: '7.000', img: '/assets/images/teen-50.jpg' },
+            { name: 'تمر خلاص جامبو', desc: 'بوكس 8 كيلو', price: '3.960', img: '/assets/images/products/6788ecc768d939f1.webp' },
+            { name: 'حمام زاجل - بوكس 20 حمامة', desc: 'بوكس 20 حمامه وزن 750 غرام', price: '12.000', img: '/assets/images/products/93a934c2e2679fac.webp' },
+            { name: 'حمام زاجل - بوكس 10 حمامات', desc: 'بوكس 10 حمامات وزن 750 غرام', price: '8.000', img: '/assets/images/products/93a934c2e2679fac.webp' },
+            { name: 'تين اخضر العبدلي الفاخر', desc: 'بوكس 3 كيلو', price: '3.500', img: '/assets/images/products/effb0bf6403e9c9a.webp' },
+            { name: 'سمك البلطي', desc: 'بوكس 5 كيلو', price: '8.000', img: '/assets/images/products/464d07923446889b.webp' },
+            { name: 'بيض دجاج عربي', desc: '3 اطباق', price: '7.000', img: '/assets/images/products/2c4404c7422c6f9b.webp' },
+            { name: 'عرض تمر الصقعي الملكي', desc: 'بوكس 8 كيلو تمر صقعي ملكي فاخر.', price: '3.500', img: '/assets/images/sakey-5.jpg' },
+            { name: 'عرض التين الأخضر الفاخر', desc: 'بوكس 5 كيلو تين أخضر فاخر.', price: '3.500', img: '/assets/images/teen-3.jpg' },
+            { name: 'عرض تمر الخلاص المكبوس', desc: 'بوكس 8 كيلو تمر الخلاص المكبوس درجة أولى.', price: '3.960', img: '/assets/images/khals-8.jpg' },
+            { name: 'عرض ربيان 10 كيلو - حجم متوسط', desc: '10 كيلو ربيان النعيرية حجم متوسط', price: '8.000', img: '/assets/images/products/9d347f7215403ff3.webp' },
+            { name: 'عرض ربيان 10 كيلو - حجم كبير', desc: '10 كيلو ربيان  النعيرية حجم كبير', price: '10.000', img: '/assets/images/products/9d347f7215403ff3.webp' },
+            { name: 'عرض كل الكويت الجديد', desc: '10 كيلو روبيان عماني جامبو طازج.', price: '5.000', img: '/assets/images/kuwaiti-jumbo-robian-10kg-new.jpg' },
+            { name: 'عرض 5 بطات فرنسي', desc: 'بوكس 5 بطات فرنسي عمر 4 - 5 شهور.', price: '10.000', img: '/assets/images/batt-5.jpg' },
+            { name: 'عرض 10 بطات فرنسي', desc: 'بوكس 10 بطات فرنسي عمر 4 - 5 شهور.', price: '20.000', img: '/assets/images/batt-10.jpg' },
+            { name: 'بطة فرنسي', desc: 'بطة فرنسي عمر 4 - 5 شهور.', price: '4.000', img: '/assets/images/batt-1.jpg' },
+            { name: 'بوكس 5 حمامات', desc: 'بوكس 5 حمامات - طازج وزن 750 جرام.', price: '4.000', img: '/assets/images/hamam-10.jpg' },
+            { name: 'بوكس 10 حمامات', desc: 'بوكس 10 حمامات - طازج وزن 750 جرام.', price: '8.000', img: '/assets/images/hamam-10.jpg' },
+            { name: 'بوكس 20 حمامة', desc: 'بوكس 20 حمامات - طازج وزن 750 جرام.', price: '12.000', img: '/assets/images/hamam-20.jpg' },
+            { name: 'بوكس 10 حمامات زاجل', desc: 'بوكس 10 حمامات زاجل - طازج وزن 850 جرام.', price: '8.000', img: '/assets/images/zagel-10.jpg' },
+            { name: 'البوكس الصغير - سمك البلطي', desc: 'بوكس سمك بلطي طازج 5 كيلو.', price: '12.000', img: '/assets/images/bolti-5.jpg' },
+            { name: 'البوكس الكبير - سمك البلطي', desc: 'بوكس سمك بلطي طازج 10 كيلو.', price: '20.000', img: '/assets/images/bolti-10.jpg' },
+            { name: 'بوكس 10 دجاج عربي ساسو', desc: 'بوكس 10 دجاجات عربي ساسو - طازج وزن 1000 - 1300 جرام.', price: '20.000', img: '/assets/images/saso-8.jpg' }
+        ];
+        
+        // تهيئة المنتجات الافتراضية في localStorage إذا لم تكن موجودة
+        function initializeDefaultProducts() {
+            const stored = JSON.parse(localStorage.getItem('allProducts')) || [];
+            if (stored.length === 0) {
+                localStorage.setItem('allProducts', JSON.stringify(defaultProducts));
+            }
+        }
+
+        // معاينة الصورة
+        document.getElementById('productImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ذاكرة مؤقتة للمنتجات (تُملأ من Firestore عبر طبقة المزامنة)
+        let productsCache = [];
+
+        function getProducts() {
+            return productsCache.length ? productsCache : (JSON.parse(localStorage.getItem('allProducts')) || defaultProducts);
+        }
+
+        async function persistProducts(products) {
+            productsCache = products;
+            if (typeof window.storeSaveProducts === 'function') {
+                const ok = await window.storeSaveProducts(products);
+                if (!ok) localStorage.setItem('allProducts', JSON.stringify(products));
+            } else {
+                localStorage.setItem('allProducts', JSON.stringify(products));
+            }
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('productName').value.trim();
+            const desc = document.getElementById('productDesc').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value).toFixed(3);
+            const fileInput = document.getElementById('productImage');
+
+            if (!name || !desc || !price) {
+                showError('يرجى ملء جميع الحقول');
+                return;
+            }
+
+            // إذا لم يتم اختيار صورة جديدة وكنا في وضع التعديل
+            if (!fileInput.files[0] && editingProductIndex !== null) {
+                const products = getProducts();
+                const newProduct = {
+                    name: name,
+                    desc: desc,
+                    price: price,
+                    img: products[editingProductIndex].img
+                };
+                if (products[editingProductIndex]._id) newProduct._id = products[editingProductIndex]._id;
+
+                products[editingProductIndex] = newProduct;
+                persistProducts(products);
+                showSuccess('تم تحديث المنتج بنجاح');
+                resetForm();
+                displayProducts();
+                return;
+            }
+
+            if (!fileInput.files[0] && editingProductIndex === null) {
+                showError('يرجى إضافة صورة للمنتج');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const newProduct = {
+                    name: name,
+                    desc: desc,
+                    price: price,
+                    img: e.target.result
+                };
+
+                let products = getProducts();
+
+                if (editingProductIndex !== null) {
+                    // تحديث المنتج
+                    if (products[editingProductIndex]._id) newProduct._id = products[editingProductIndex]._id;
+                    products[editingProductIndex] = newProduct;
+                    showSuccess('تم تحديث المنتج بنجاح');
+                } else {
+                    // إضافة منتج جديد في البداية
+                    products.unshift(newProduct);
+                    showSuccess('تم إضافة المنتج بنجاح');
+                }
+
+                persistProducts(products);
+                resetForm();
+                displayProducts();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function editProduct(index) {
+            const products = getProducts();
+            const product = products[index];
+
+            editingProductIndex = index;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productDesc').value = product.desc;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('previewImg').src = product.img;
+            document.getElementById('imagePreview').style.display = 'block';
+            
+            document.getElementById('formTitle').textContent = 'تعديل المنتج';
+            document.getElementById('submitBtn').textContent = 'تحديث المنتج';
+            document.getElementById('submitBtn').classList.add('update');
+            document.getElementById('cancelBtn').style.display = 'block';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteProduct(index) {
+            const products = getProducts();
+            const product = products[index];
+
+            if (confirm(`هل تريد حذف "${product.name}"؟`)) {
+                products.splice(index, 1);
+                persistProducts(products);
+                showSuccess('تم حذف المنتج بنجاح');
+                displayProducts();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('addProductForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('formTitle').textContent = 'إضافة منتج جديد';
+            document.getElementById('submitBtn').textContent = 'حفظ المنتج';
+            document.getElementById('submitBtn').classList.remove('update');
+            document.getElementById('cancelBtn').style.display = 'none';
+            editingProductIndex = null;
+        }
+
+        function displayProducts() {
+            const products = getProducts();
+            const grid = document.getElementById('productsGrid');
+            
+            document.getElementById('productCount').textContent = products.length;
+
+            if (products.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><p>لا توجد منتجات</p></div>';
+                return;
+            }
+
+            grid.innerHTML = products.map((product, index) => `
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="${product.img}" alt="${product.name}">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">
+                            ${product.name}
+                        </div>
+                        <div class="product-desc">${product.desc}</div>
+                        <div class="product-price">${product.price} ر.ق</div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="edit-btn" onclick="editProduct(${index})">✏️ تعديل</button>
+                        <button class="delete-btn" onclick="deleteProduct(${index})">🗑️ حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.textContent = '✓ ' + msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = '✗ ' + msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        // عرض المنتجات عند التحميل — من Firestore مع احتياطي محلي
+        window.addEventListener('DOMContentLoaded', async function() {
+            initializeDefaultProducts();
+            // 1) رسم فوري من النسخة المحلية قبل انتظار الشبكة
+            const cached = JSON.parse(localStorage.getItem('allProducts') || 'null');
+            productsCache = (cached && cached.length) ? cached : defaultProducts;
+            displayProducts();
+
+            // 2) مزامنة مع Firestore ثم إعادة الرسم
+            if (typeof window.storeGetProducts === 'function') {
+                const fresh = await window.storeGetProducts();
+                if (fresh && fresh.length) {
+                    productsCache = fresh;
+                    displayProducts();
+                }
+            }
+            // تحديث لحظي عند تغيير المنتجات من جهاز آخر
+            if (typeof window.storeWatchProducts === 'function') {
+                window.storeWatchProducts(function (items) {
+                    productsCache = items;
+                    displayProducts();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

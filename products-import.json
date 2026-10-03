@@ -1,0 +1,128 @@
+[
+  {
+    "name": "ريس خروف استرالي مجمد",
+    "desc": "",
+    "price": "2.600",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089103150-d425f444e9889386.jpeg"
+  },
+  {
+    "name": "ذبيحة ضان كيني مبرد",
+    "desc": "سعر الكيلو 2.90 د.ب",
+    "price": "2.900",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089143427-b4b46e439c84041f.jpeg"
+  },
+  {
+    "name": "لحم عجل باسكتاني",
+    "desc": "اجود انواع اللحوم",
+    "price": "2.401",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089225165-40b6b2fbacb24875.jpeg"
+  },
+  {
+    "name": "ذبيحة خروف كيني",
+    "desc": "اجود انواع اللحوم من كينيا",
+    "price": "2.850",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089279826-fc225ad973fdb849.jpeg"
+  },
+  {
+    "name": "كراعين بقر استرالي",
+    "desc": "",
+    "price": "1.300",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089339881-a445918fb7e3be1b.jpeg"
+  },
+  {
+    "name": "راس خروف استرالي مجمد",
+    "desc": "",
+    "price": "2.000",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089366651-2a35062c0fd41063.jpeg"
+  },
+  {
+    "name": "ماعز صومالي",
+    "desc": "",
+    "price": "3.500",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089396899-8125004b006bfbe4.jpeg"
+  },
+  {
+    "name": "ذبيحة خروف استرالي",
+    "desc": "",
+    "price": "3.400",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089432237-d47d0617153bbf25.jpeg"
+  },
+  {
+    "name": "عجل باسكتاني مبرد",
+    "desc": "",
+    "price": "3.125",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089454753-63288591890486e5.jpeg"
+  },
+  {
+    "name": "كبدة عجل باكستاني",
+    "desc": "",
+    "price": "3.425",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089490661-d1d0d829f7be0d3e.jpeg"
+  },
+  {
+    "name": "خروف عربي",
+    "desc": "أهوازي ذبح محلي طازج",
+    "price": "139.999",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089524807-dc6128963b52f51b.jpeg"
+  },
+  {
+    "name": "خروف صومالي",
+    "desc": "بربري ذبح محلي طازج",
+    "price": "59.500",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089567508-d616d209e9729c51.jpeg"
+  },
+  {
+    "name": "ماعز صومالي",
+    "desc": "تيس ذبح محلي طازج",
+    "price": "60.000",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089597480-4e0d111cf16fd510.jpeg"
+  },
+  {
+    "name": "خروف صومالي",
+    "desc": "شامل الذبح والتقطيع والتوصيل البيع بالكيلو",
+    "price": "4.250",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089635750-03664b7a6f11f715.jpeg"
+  },
+  {
+    "name": "خروف نعيمي",
+    "desc": "شامل الذبح والتقطيع والتوصيل",
+    "price": "70.000",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089681467-0d6e8429113ed047.jpeg"
+  },
+  {
+    "name": "ذبيحة خروف استرالي مجمدة",
+    "desc": "شامل التقطيع والتغليف والتوصيل",
+    "price": "2.950",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089718372-8cad63e1e01aaa72.jpeg"
+  },
+  {
+    "name": "خروف صومالي مسمن",
+    "desc": "شامل الذبح والتقطيع والتغليف",
+    "price": "4.000",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089762131-b0621e0d6810b149.jpeg"
+  },
+  {
+    "name": "ماعز صومالي",
+    "desc": "شامل الذبح والتقطيع والتغليف",
+    "price": "66.500",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785089804053-262a06c33d404786.jpeg"
+  },
+  {
+    "name": "ماعز صومالي",
+    "desc": "ماعز صومالي ذبح محلي تحت اشراف طبيب بيطري",
+    "price": "30.000",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785138025949-76ecd274f32578cc.jpeg"
+  },
+  {
+    "name": "خروف صومالي",
+    "desc": "خروف صومالي بربري ذبح محلي تحت اشراف طيب بيطري",
+    "price": "29.750",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785138139734-55e69cfce1129ae4.jpeg"
+  },
+  {
+    "name": "خروف نعيمي",
+    "desc": "خروف نعيمي اهوازي حي او مذبوح تحت اشراف طبيب بيطري",
+    "price": "70.000",
+    "img": "https://qufhhvrvgbphlqskeyyj.supabase.co/storage/v1/object/public/product-images/products/1785138562089-437b8e16be7511f0.jpeg"
+  }
+]

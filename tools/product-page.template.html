@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل المنتج | أرياف</title>
+<meta name="description" content="تفاصيل المنتج وتوصيل مجاني خلال 40 دقيقة في عمان - أرياف">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#004d7a">
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="أرياف">
+<meta property="og:locale" content="ar_OM">
+<meta property="og:title" content="تفاصيل المنتج | أرياف">
+<meta property="og:description" content="توصيل مجاني خلال 40 دقيقة في عمان - أرياف">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="/assets/js/firebase-client.js?v=20260913"></script>
+<script src="/assets/js/products-store.js"></script>
+<script src="/assets/js/cart.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: #f8f9fa; color: #111; padding-bottom: 100px; }
+a { text-decoration: none; color: inherit; }
+
+/* ── رأس الصفحة (مطابق للصفحة الرئيسية) ── */
+.MainContainer_headerContainer__RY5Ne { background: #fff; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.Header_header__HSEQ9 { max-width: 1400px; margin: 0 auto; padding: 10px 15px; }
+.Header_nav__DVSK7 { display: flex; justify-content: space-between; align-items: center; }
+.Header_logoWithCatalog__v4fgc { display: flex; align-items: center; gap: 10px; }
+.Logo_logo__oq6_b { display: block; width: 35px; height: 35px; position: relative; }
+.Logo_fullLogo__l2rPp { width: 100%; height: 100%; object-fit: contain; }
+.Header_sideWrapper__3FSV4 { display: flex; align-items: center; gap: 8px; }
+.CartButton_wrapper__DN_bX { display: flex; align-items: center; gap: 6px; }
+.CartButton_wrapper__DN_bX .Button_primary__SrbPy {
+  background-color: #004d7a; color: #fff; border: none; padding: 7px 14px;
+  border-radius: 10px; font-weight: bold; cursor: pointer; display: flex;
+  align-items: center; gap: 6px; font-size: 13px;
+}
+.Header_homeBtn__Z1xQp {
+  background: #f1f3f5; border: none; padding: 7px 12px; border-radius: 10px;
+  font-weight: 600; cursor: pointer; font-size: 13px; color: #111;
+}
+
+/* ── المحتوى ── */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 15px; }
+.breadcrumb { font-size: 13px; color: #777; margin: 10px 0 18px; }
+.breadcrumb a { color: #004d7a; }
+.card { background: #fff; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); overflow: hidden; display: flex; flex-wrap: wrap; }
+.card-img { flex: 1 1 320px; background: #f1f3f5; display: flex; align-items: center; justify-content: center; min-height: 300px; position: relative; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; max-height: 420px; }
+.card-body { flex: 1 1 320px; padding: 26px; display: flex; flex-direction: column; gap: 14px; }
+h1 { font-size: 24px; color: #111; line-height: 1.5; font-weight: 800; }
+.desc { color: #444; line-height: 1.9; font-size: 15px; }
+.price { font-size: 26px; font-weight: 800; color: #004d7a; }
+.price small { font-size: 15px; font-weight: 600; }
+.badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge { background: #e8f4ea; color: #1e7e34; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+.badge.blue { background: #e7f1f8; color: #004d7a; }
+
+/* زر الإضافة وعداد الكمية (مطابق للصفحة الرئيسية) */
+.buy-area { position: relative; margin-top: auto; min-height: 48px; display: flex; align-items: center; }
+.AddButton {
+  background: #004d7a; color: #fff; border: none; padding: 12px 30px;
+  border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 15px;
+}
+.QuantityController {
+  background: #f8f9fa; border: 1px solid #dee2e6; padding: 4px 12px;
+  border-radius: 10px; display: flex; align-items: center; gap: 14px;
+  font-weight: 700; font-size: 15px;
+}
+.QuantityController button { background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; color: #004d7a; padding: 2px 8px; }
+
+.section { background: #fff; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); padding: 22px 26px; margin-top: 18px; }
+.section h2 { font-size: 18px; color: #004d7a; margin-bottom: 12px; }
+.section p { color: #444; line-height: 2; font-size: 14.5px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.rel-card { background: #f8f9fa; border-radius: 12px; overflow: hidden; border: 1px solid #eee; transition: transform .15s; }
+.rel-card:hover { transform: translateY(-3px); }
+.rel-card img { width: 100%; height: 110px; object-fit: cover; }
+.rel-card .rel-body { padding: 10px; }
+.rel-card .rel-name { font-size: 13.5px; font-weight: 700; color: #222; line-height: 1.5; }
+.rel-card .rel-price { font-size: 13px; font-weight: 800; color: #004d7a; margin-top: 4px; }
+.footer { text-align: center; color: #999; font-size: 13px; padding: 26px 15px; }
+.footer a { color: #004d7a; }
+.toast { position: fixed; bottom: 100px; right: 50%; transform: translateX(50%) translateY(80px); background: #1e7e34; color: #fff; padding: 12px 26px; border-radius: 12px; font-weight: 700; opacity: 0; transition: all .3s; z-index: 999; }
+.toast.show { opacity: 1; transform: translateX(50%) translateY(0); }
+.loading { text-align: center; color: #999; padding: 60px 20px; font-size: 15px; }
+.hidden { display: none !important; }
+
+/* ── شريط السلة العائم أسفل الشاشة (مطابق للصفحة الرئيسية) ── */
+.FloatingCartBar {
+  position: fixed; bottom: 15px; left: 5%; width: 90%; max-width: 500px;
+  background-color: #cccccc; color: #666666; border-radius: 16px; padding: 12px 18px;
+  display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); z-index: 1000; cursor: default;
+  transition: all 0.3s ease;
+}
+.FloatingCartBar.active-cart { background-color: #004d7a; color: white; box-shadow: 0 8px 20px rgba(0, 77, 122, 0.3); cursor: pointer; }
+.FloatingCartBar .cart-text { font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
+.FloatingCartBar .cart-badge {
+  background: #e0e0e0; color: #666; width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 12px;
+  font-weight: bold; transition: all 0.3s ease;
+}
+.FloatingCartBar.active-cart .cart-badge { background: #ffffff; color: #004d7a; }
+.FloatingCartBar .cart-price { font-size: 14px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<!-- رأس الصفحة -->
+<div class="MainContainer_headerContainer__RY5Ne">
+  <header class="Header_header__HSEQ9">
+    <div class="Header_nav__DVSK7">
+      <div class="Header_logoWithCatalog__v4fgc">
+        <a class="Logo_logo__oq6_b" href="/"><img alt="أرياف" src="/assets/images/areaf-logo.webp" class="Logo_fullLogo__l2rPp"></a>
+        <button class="Header_homeBtn__Z1xQp" onclick="window.location.href='/#products'">المنتجات</button>
+      </div>
+      <div class="Header_sideWrapper__3FSV4">
+        <div class="CartButton_wrapper__DN_bX">
+          <button class="Button_button__xKXcy Button_primary__SrbPy" onclick="goToCart()">
+            <span id="header-total">0.000 ر.ع</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<main class="wrap">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">الرئيسية</a> &lsaquo; <a href="/#products">المنتجات</a> &lsaquo; <span id="crumb-name">…</span>
+  </nav>
+
+  <div class="loading" id="loadingBox">⏳ جاري تحميل تفاصيل المنتج…</div>
+
+  <div class="hidden" id="notFoundBox">
+    <div class="section" style="text-align:center">
+      <h2>المنتج غير متوفر</h2>
+      <p>يبدو أن هذا المنتج غير موجود أو تم حذفه.</p>
+      <p style="margin-top:14px"><a href="/#products" style="color:#004d7a;font-weight:700">↩︎ تصفّح جميع المنتجات</a></p>
+    </div>
+  </div>
+
+  <div class="hidden" id="contentBox">
+    <article class="card" itemscope itemtype="https://schema.org/Product">
+      <div class="card-img"><img id="p-img" src="" alt="" itemprop="image" fetchpriority="high"></div>
+      <div class="card-body">
+        <h1 itemprop="name" id="p-name"></h1>
+        <div class="badges">
+          <span class="badge">✅ طازج يومياً</span>
+          <span class="badge blue">🚚 توصيل مجاني خلال 40 دقيقة</span>
+          <span class="badge blue">🇴🇲 داخل عمان</span>
+        </div>
+        <p class="desc" itemprop="description" id="p-desc"></p>
+        <div class="price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+          <meta itemprop="priceCurrency" content="QAR">
+          <span itemprop="price" content="" id="p-price"></span> <small>ر.ع</small>
+          <link itemprop="availability" href="https://schema.org/InStock">
+        </div>
+        <div class="buy-area" id="buyArea"></div>
+      </div>
+    </article>
+
+    <section class="section">
+      <h2 id="p-heading"></h2>
+      <p id="p-longdesc"></p>
+    </section>
+
+    <section class="section" id="relatedSection">
+      <h2>منتجات طازجة أخرى قد تعجبك</h2>
+      <div class="related" id="relatedGrid"></div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">أرياف — توصيل المنتجات الطازجة في عمان 🇴🇲<br>
+<a href="/prices">أسعار منتجاتنا اليوم</a> · <a href="/terms.html">الشروط والأحكام</a> · <a href="/privacy.html">سياسة الخصوصية</a> · <a href="/returns.html">سياسة الاسترجاع</a></footer>
+
+<!-- شريط السلة العائم السفلي -->
+<div class="FloatingCartBar" id="floating-cart-bar" onclick="goToCart()">
+  <div class="cart-text" id="cart-text-content">سلة المنتجات فارغة</div>
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <span class="cart-price" id="footer-total">0.000 ر.ع</span>
+    <div class="cart-badge" id="footer-count">0</div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ تمت الإضافة إلى السلة</div>
+
+<script>
+// نسخة مدمجة من الكتالوج: عرض فوري بلا انتظار الشبكة، ثم تُزامَن من Firestore
+const defaultProducts = [
+/*__PRODUCTS__*/
+];
+
+let currentProduct = null;
+let productIndex = -1;
+
+function productIdFromPath() {
+    const m = (window.location.pathname || '').match(/^\/product\/([^\/]+)/);
+    return m ? decodeURIComponent(m[1]) : null;
+}
+
+function findProduct(products, id) {
+    if (id) {
+        const byId = products.find(function (p) { return p._id === id; });
+        if (byId) return byId;
+    }
+    return null;
+}
+
+function esc(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function slugify(name) {
+    return (name || 'product').replace(/[^\w\s\u0600-\u06FF-]/g, '').trim().replace(/[\s_]+/g, '-');
+}
+
+function renderProduct(product, products) {
+    currentProduct = product;
+    productIndex = products.indexOf(product);
+
+    document.getElementById('loadingBox').classList.add('hidden');
+    document.getElementById('contentBox').classList.remove('hidden');
+
+    const name = product.name || '';
+    document.getElementById('crumb-name').textContent = name;
+    document.getElementById('p-name').textContent = name;
+    document.getElementById('p-desc').textContent = product.desc || '';
+    document.getElementById('p-price').textContent = product.price;
+    document.getElementById('p-price').setAttribute('content', product.price);
+    const img = document.getElementById('p-img');
+    img.src = product.img || '/assets/images/areaf-logo.webp';
+    img.alt = name + ' - أرياف عمان';
+    document.getElementById('p-heading').textContent = name + ' — توصيل طازج في عمان من أرياف';
+    document.getElementById('p-longdesc').textContent =
+        'اطلب ' + name + ' الآن من متجر أرياف الإلكتروني واحصل على توصيل مجاني وسريع خلال 40 دقيقة لجميع مناطق عمان. ' +
+        (product.desc || '') +
+        ' نحرص على وصول منتجاتنا طازجة يومياً من المزرعة إلى باب بيتك، مع إمكانية الدفع عند الاستلام أو بالكي نت.';
+
+    document.title = name + ' بسعر ' + product.price + ' ر.ع | توصيل مجاني في عمان - أرياف';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content',
+        name + ' من أرياف بسعر ' + product.price + ' ر.ع شامل التوصيل — توصيل مجاني خلال 40 دقيقة لجميع مناطق عمان. اطلب أونلاين الآن.');
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', document.title);
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', metaDesc ? metaDesc.getAttribute('content') : '');
+    const ogImg = document.querySelector('meta[property="og:image"]');
+    if (ogImg && product.img) ogImg.setAttribute('content', window.location.origin + product.img);
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical && product._id) {
+        canonical.setAttribute('href', window.location.origin + '/product/' + product._id + '/' + encodeURIComponent(slugify(name)));
+    }
+
+    renderBuyArea();
+    renderRelated(products);
+}
+
+// نفس سلوك زر «إضافة» في الصفحة الرئيسية: يتحول إلى عداد كمية
+function renderBuyArea() {
+    const area = document.getElementById('buyArea');
+    const qty = cartQty();
+    if (qty > 0) {
+        area.innerHTML =
+            '<div class="QuantityController">' +
+            '<button type="button" onclick="adjustQty(this,-1)">-</button>' +
+            '<span class="qty-val">' + qty + '</span>' +
+            '<button type="button" onclick="adjustQty(this,1)">+</button>' +
+            '</div>';
+    } else {
+        area.innerHTML = '<button class="AddButton" type="button" onclick="updateQuantity(this,1)">إضافة</button>';
+    }
+}
+
+function cartQty() {
+    const cart = window.CartGet ? window.CartGet() : [];
+    const hit = cart.find(function (p) { return p.name === currentProduct.name; });
+    return hit ? (hit.qty || 0) : 0;
+}
+
+function updateQuantity(btn, change) {
+    if (window.CartAdd) window.CartAdd(currentProduct, 1);
+    renderBuyArea();
+    showToast();
+    calculateTotal();
+}
+
+function adjustQty(btn, change) {
+    const qtySpan = btn.parentElement.querySelector('.qty-val');
+    const next = parseInt(qtySpan.textContent, 10) + change;
+    if (next <= 0) {
+        if (window.CartRemove) window.CartRemove(currentProduct.name);
+    } else {
+        if (window.CartSetQty) window.CartSetQty(currentProduct.name, next);
+    }
+    renderBuyArea();
+    calculateTotal();
+}
+
+function showToast() {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 1800);
+}
+
+function renderRelated(products) {
+    const grid = document.getElementById('relatedGrid');
+    const section = document.getElementById('relatedSection');
+    if (!grid) return;
+    const others = products.filter(function (p) { return p !== currentProduct && p._id; });
+    const start = productIndex >= 0 ? productIndex : 0;
+    const picks = others.slice(start, start + 4);
+    const fill = others.slice(0, Math.max(0, 4 - picks.length));
+    const list = picks.concat(fill).slice(0, 4);
+    if (!list.length) { section.classList.add('hidden'); return; }
+    grid.innerHTML = list.map(function (p) {
+        const url = '/product/' + p._id + '/' + encodeURIComponent(slugify(p.name));
+        return '<a class="rel-card" href="' + url + '">' +
+            '<img src="' + esc(p.img) + '" alt="' + esc(p.name) + '" loading="lazy">' +
+            '<div class="rel-body"><div class="rel-name">' + esc(p.name) + '</div>' +
+            '<div class="rel-price">' + esc(p.price) + ' ر.ع</div></div></a>';
+    }).join('');
+}
+
+function showNotFound() {
+    document.getElementById('loadingBox').classList.add('hidden');
+    document.getElementById('notFoundBox').classList.remove('hidden');
+    document.getElementById('crumb-name').textContent = 'غير متوفر';
+    document.title = 'المنتج غير متوفر | أرياف';
+}
+
+function calculateTotal() {
+    const total = window.CartTotal ? window.CartTotal() : 0;
+    const totalCount = window.CartCount ? window.CartCount() : 0;
+    const formatted = total.toFixed(3) + ' ر.ع';
+    document.getElementById('header-total').textContent = formatted;
+    document.getElementById('footer-total').textContent = formatted;
+    document.getElementById('footer-count').textContent = totalCount;
+
+    const bar = document.getElementById('floating-cart-bar');
+    const text = document.getElementById('cart-text-content');
+    if (totalCount > 0) {
+        bar.classList.add('active-cart');
+        text.innerHTML = '<span>&#8249;</span> اذهب الى السلة';
+    } else {
+        bar.classList.remove('active-cart');
+        text.textContent = 'سلة المنتجات فارغة';
+    }
+}
+
+function goToCart() {
+    const count = window.CartCount ? window.CartCount() : 0;
+    if (count > 0) window.location.href = '/cartepage.html';
+}
+
+// تحميل المنتجات: نسخة مدمجة فوراً، ثم Firestore (مع متابعة لحظية)
+document.addEventListener('DOMContentLoaded', async function () {
+    calculateTotal();
+
+    const id = productIdFromPath();
+    const cached = JSON.parse(localStorage.getItem('allProducts') || 'null');
+    const local = (cached && cached.length) ? cached : defaultProducts;
+    const localHit = findProduct(local, id);
+    if (localHit) renderProduct(localHit, local);
+
+    if (typeof window.storeGetProducts === 'function') {
+        try {
+            const fresh = await window.storeGetProducts();
+            const hit = findProduct(fresh, id);
+            if (hit) renderProduct(hit, fresh);
+            else if (!localHit) showNotFound();
+        } catch (e) {
+            if (!localHit) showNotFound();
+        }
+    } else if (!localHit) {
+        showNotFound();
+    }
+
+    if (typeof window.storeWatchProducts === 'function') {
+        window.storeWatchProducts(function (items) {
+            const hit = findProduct(items, id);
+            if (hit) renderProduct(hit, items);
+        });
+    }
+});
+</script>
+</body>
+</html>

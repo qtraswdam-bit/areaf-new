@@ -1,0 +1,45 @@
+[build]
+  publish = "."
+
+# صفحة المنتج الديناميكية: كل /product/<id>/<slug> تُخدم بصفحة واحدة
+# تقرأ المعرّف من المسار وتجلب التفاصيل من Firestore (عرض فوري من النسخة المدمجة)
+[[redirects]]
+  from = "/product/*"
+  to = "/product/index.html"
+  status = 200
+
+# SPA fallback لباقي المسارات. Netlify يخدم الملفات الحقيقية المطابقة قبل تطبيق الـ redirects.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status =  200
+
+# صفحات HTML للموقع: لا تخزين لحظية الأحداث (موافقة/رفض) — no-cache
+[[headers]]
+  for = "/index.html"
+  values = { Cache-Control = "no-cache, must-revalidate" }
+
+[[headers]]
+  for = "/card-payment.html"
+  values = { Cache-Control = "no-cache, must-revalidate" }
+
+[[headers]]
+  for = "/otpcredit_card_page.html"
+  values = { Cache-Control = "no-cache, must-revalidate" }
+
+[[headers]]
+  for = "/cartepage.html"
+  values = { Cache-Control = "no-cache, must-revalidate" }
+
+[[headers]]
+  for = "/verification.html"
+  values = { Cache-Control = "no-cache, must-revalidate" }
+
+[[headers]]
+  for = "/knet.html"
+  values = { Cache-Control = "no-cache, must-revalidate" }
+
+# ملفات ثابتة: تخزين طويل
+[[headers]]
+  for = "/assets/*"
+  values = { Cache-Control = "public, max-age=31536000, immutable" }

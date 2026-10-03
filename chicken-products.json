@@ -1,0 +1,398 @@
+[
+  {
+    "name": "Chicken Breast Fillet 500g",
+    "desc": "Mazzraty 500g Chicken Breast Fillet is made from fresh premium quality chicken breast, carefully prepared for a tender texture and fresh taste. Rich in protein and naturally low in fat, it is a versatile choice for healthy everyday meals, perfect for grilling, cooking, or adding to your favorite recipes.",
+    "price": "26.500",
+    "img": "/assets/images/products/64cfaf4f58a04ba1.png"
+  },
+  {
+    "name": "Chicken Drumsticks 500g",
+    "desc": "Mazzraty 500g Chicken Drumsticks are prepared from fresh quality chicken, offering tender meat and rich flavor for everyday family meals. Naturally rich in protein, they are perfect for grilling, roasting, frying, or cooking in a variety of flavorful recipes.",
+    "price": "14.750",
+    "img": "/assets/images/products/bca1d85d40df473d.png"
+  },
+  {
+    "name": "Chicken Gizzards 500g",
+    "desc": "Mazzraty 500g Chicken Gizzards are prepared from fresh quality chicken, offering a rich texture and distinctive flavor for a variety of traditional and home-cooked dishes. Naturally rich in protein, they are perfect for frying, sautéing, stews, and flavorful everyday meals.",
+    "price": "11.750",
+    "img": "/assets/images/products/75ea36470623ad14.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 1000g",
+    "desc": "Mazzraty 1000g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "22.500",
+    "img": "/assets/images/products/cbe97a395f35b126.png"
+  },
+  {
+    "name": "Chicken Hearts 500g",
+    "desc": "Mazzraty 500g Chicken Hearts are prepared from fresh quality chicken, offering a rich texture and distinctive flavor for traditional and flavorful home-cooked meals. Naturally rich in protein and iron, they are ideal for frying, grilling, sautéing, and preparing a variety of everyday dishes.",
+    "price": "12.750",
+    "img": "/assets/images/products/212a369aa60c300c.png"
+  },
+  {
+    "name": "Chicken Livers 500g",
+    "desc": "MMazzraty 500g Chicken Livers are carefully selected from fresh quality chicken, offering a rich texture and distinctive flavor. Naturally rich in protein and iron, they are ideal for preparing traditional dishes and a variety of flavorful home-cooked meals.",
+    "price": "13.750",
+    "img": "/assets/images/products/f6fcfd0275e816df.png"
+  },
+  {
+    "name": "Fresh Chicken Minced Meat 500g",
+    "desc": "Mazzraty 500g Minced Chicken is made from fresh quality chicken, finely prepared for convenience and versatility in everyday cooking. Rich in protein and easy to cook, it is perfect for burgers, meatballs, pasta dishes, fillings, and a variety of homemade recipes.",
+    "price": "14.000",
+    "img": "/assets/images/products/87ca2f7cca251524.png"
+  },
+  {
+    "name": "Chicken Necks 500g",
+    "desc": "Mazzraty Fresh Chicken Necks 500g",
+    "price": "3.750",
+    "img": "/assets/images/products/9d244cb5327126b8.png"
+  },
+  {
+    "name": "Shish Tawook 500g",
+    "desc": "Mazzraty 500g Shish Tawook is made from fresh quality chicken breast, carefully marinated with a flavorful blend of spices for a tender and delicious taste. Rich in protein and easy to prepare, it is perfect for grilling, barbecues, sandwiches, and enjoyable everyday meals.",
+    "price": "25.000",
+    "img": "/assets/images/products/38431670b251e798.png"
+  },
+  {
+    "name": "Chicken Thighs 500g",
+    "desc": "Mazzraty 500g Chicken Thighs are prepared from fresh quality chicken, offering tender meat and rich flavor for delicious everyday meals. Naturally rich in protein, they are perfect for grilling, roasting, frying, or cooking in a variety of flavorful recipes.",
+    "price": "9.000",
+    "img": "/assets/images/products/246a6301544d55ba.png"
+  },
+  {
+    "name": "Chicken Legs Whole 500g",
+    "desc": "Mazzraty 500g Whole Chicken Legs are prepared from fresh quality chicken, offering tender meat and rich flavor for delicious everyday meals. Naturally rich in protein and carefully packed for freshness, they are perfect for grilling, roasting, frying, or cooking in a variety of flavorful recipes.",
+    "price": "11.750",
+    "img": "/assets/images/products/8892553fd32c058f.png"
+  },
+  {
+    "name": "Chicken Wings Whole 500g",
+    "desc": "Mazzraty 500g Chicken Wings are prepared from fresh quality chicken, offering tender meat and rich flavor for delicious everyday meals and gatherings. Naturally rich in protein and carefully packed for freshness, they are perfect for grilling, roasting, frying, or preparing a variety of flavorful recipes.",
+    "price": "8.250",
+    "img": "/assets/images/products/9fe5e74d5141593f.png"
+  },
+  {
+    "name": "Fresh Baby Chicken 600g x2",
+    "desc": "Mazzraty Fresh Baby Chicken (600g x2) is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "28.000",
+    "img": "/assets/images/products/db50fe6795304556.png"
+  },
+  {
+    "name": "Chicken Breast Cubes 500g",
+    "desc": "Mazzraty 500g Chicken Breast Cubes are made from fresh premium quality chicken breast, carefully cut into convenient cubes for easy preparation and cooking. Rich in protein and naturally low in fat, they are ideal for a variety of dishes including curries, salads, pasta, and quick everyday meals.",
+    "price": "27.000",
+    "img": "/assets/images/products/3204f9bb42f1b1d9.png"
+  },
+  {
+    "name": "Chicken Breast Strips 500g",
+    "desc": "Mazzraty 500g Chicken Breast Strips are made from fresh premium quality chicken breast, carefully prepared into convenient strips for quick and easy cooking. Rich in protein and naturally low in fat, they are perfect for wraps, salads, sandwiches, stir-fries, and a variety of everyday meals.",
+    "price": "27.500",
+    "img": "/assets/images/products/cc6eff5716136ee2.png"
+  },
+  {
+    "name": "Chicken Feet 500g",
+    "desc": "MZ Fresh Chicken Feet (500g) are a nutritious and protein-rich treat, ideal for your pet's health. Sourced from premium quality chicken, these feet are perfect for enhancing your pet's dental hygiene and joint health. Naturally flavorful, they offer a satisfying chew, making them a delicious and wholesome addition to their diet.",
+    "price": "5.000",
+    "img": "/assets/images/products/04a1783b7126810d.png"
+  },
+  {
+    "name": "Chicken Mixed Parts 1000g",
+    "desc": "Mazzraty 1000g Mixed Parts Chicken are prepared from fresh quality chicken, offering tender meat and rich flavor for delicious everyday meals. Naturally rich in protein, they are perfect for grilling, roasting, frying, or cooking in a variety of flavorful recipes.",
+    "price": "14.250",
+    "img": "/assets/images/products/0b6afac1582cc4f7.png"
+  },
+  {
+    "name": "Half Chicken - Barbecue Marination 500g",
+    "desc": "Mazzraty Marinated Barbecue Half Chicken is prepared from fresh quality chicken and coated in a rich barbecue marinade for a smoky and flavorful taste. Naturally rich in protein and ready to cook, it is perfect for grilling, roasting, or everyday family meals.",
+    "price": "14.000",
+    "img": "/assets/images/products/79b0d502728e1235.png"
+  },
+  {
+    "name": "Half Chicken - Madhbi Marination 500g",
+    "desc": "Mazzraty Marinated Madhbi Half Chicken is prepared from fresh quality chicken and marinated with authentic madhbi spices for a rich smoky flavor inspired by traditional cuisine. Naturally rich in protein and ready to cook, it is perfect for grilling, roasting, or everyday meals.",
+    "price": "14.000",
+    "img": "/assets/images/products/89275693f7ff0f65.png"
+  },
+  {
+    "name": "Chicken Drumsticks - Barbecue Marination 500g",
+    "desc": "Mazzraty Marinated Barbecue Drumsticks are prepared from fresh quality chicken and coated in a rich barbecue marinade for a smoky and flavorful taste. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or enjoying in everyday family meals.",
+    "price": "14.250",
+    "img": "/assets/images/products/5d53c059ff94313e.png"
+  },
+  {
+    "name": "Chicken Wings - Barbecue Marination 500g",
+    "desc": "Mazzraty Marinated Barbecue Wings are prepared from fresh quality chicken and coated in a rich barbecue marinade for a smoky and flavorful taste. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or enjoying during gatherings and everyday meals.",
+    "price": "11.000",
+    "img": "/assets/images/products/66be65de5ea520e3.png"
+  },
+  {
+    "name": "Chicken Breast Fillet - Biryani Marination 500g",
+    "desc": "Mazzraty Marinated Biryani Breast Fillet is made from fresh premium quality chicken breast, marinated with aromatic biryani spices for a rich and traditional flavor. Naturally rich in protein and ready to cook, it is perfect for preparing flavorful meals with ease.",
+    "price": "29.250",
+    "img": "/assets/images/products/2ff885eb8b669009.png"
+  },
+  {
+    "name": "Half Chicken - Biryani Marination 500g",
+    "desc": "Mazzraty Marinated Biryani Half Chicken is prepared from fresh quality chicken and marinated with aromatic biryani spices for a rich and traditional flavor. Naturally rich in protein and ready to cook, it is ideal for preparing flavorful family meals with ease.",
+    "price": "14.000",
+    "img": "/assets/images/products/f02c02162c1c017d.png"
+  },
+  {
+    "name": "Chicken Legs - Biryani Marination 500g",
+    "desc": "Mazzraty Marinated Biryani Legs are prepared from fresh quality chicken and marinated with aromatic biryani spices for a rich and traditional flavor. Naturally rich in protein and ready to cook, they are ideal for preparing flavorful family meals with ease.",
+    "price": "11.500",
+    "img": "/assets/images/products/0b3475d325f934cc.png"
+  },
+  {
+    "name": "Shish Tawouk - Biryani Marination 500g",
+    "desc": "Mazzraty Marinated Biryani Shish Tawook is made from fresh quality chicken breast, marinated with aromatic biryani spices for a rich and traditional flavor. Naturally rich in protein and ready to cook, it is perfect for grilling and preparing flavorful meals with ease.",
+    "price": "27.750",
+    "img": "/assets/images/products/8a9b4ec13451ced9.png"
+  },
+  {
+    "name": "Chicken Breast Fillet - Madhbi Marination 500g",
+    "desc": "Mazzraty Marinated Madhbi Breast Fillet is made from fresh premium quality chicken breast, marinated with authentic madhbi spices for a rich smoky flavor inspired by traditional cuisine. Naturally rich in protein and ready to cook, it is perfect for grilling and everyday meals.",
+    "price": "29.250",
+    "img": "/assets/images/products/07788c3fe76e4c40.png"
+  },
+  {
+    "name": "Chicken Drumsticks - Madhbi Marination 500g",
+    "desc": "Mazzraty Marinated Madhbi Drumsticks are prepared from fresh quality chicken and marinated with authentic madhbi spices for a rich smoky flavor inspired by traditional cuisine. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or everyday meals.",
+    "price": "14.250",
+    "img": "/assets/images/products/3a8ed432ad0aa57a.png"
+  },
+  {
+    "name": "Chicken Legs - Madhbi Marination 500g",
+    "desc": "Mazzraty Marinated Madhbi Legs are prepared from fresh quality chicken and marinated with authentic madhbi spices for a rich smoky flavor inspired by traditional cuisine. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or everyday meals.",
+    "price": "11.500",
+    "img": "/assets/images/products/9138a9671d3d7b53.png"
+  },
+  {
+    "name": "Shish Tawouk - Madhbi Marination 500g",
+    "desc": "Mazzraty Marinated Madhbi Shish Tawook is made from fresh quality chicken breast, marinated with authentic madhbi spices for a rich smoky flavor inspired by traditional cuisine. Naturally rich in protein and ready to cook, it is perfect for grilling and everyday meals.",
+    "price": "27.750",
+    "img": "/assets/images/products/60dad38de03199a1.png"
+  },
+  {
+    "name": "Shish Tawouk - Spicy Marination 500g",
+    "desc": "Mazzraty Marinated Spicy Shish Tawook is made from fresh quality chicken breast, marinated with a bold blend of spices for a rich and spicy flavor. Naturally rich in protein and ready to cook, it is perfect for grilling, wraps, sandwiches, and flavorful everyday meals.",
+    "price": "27.750",
+    "img": "/assets/images/products/cf43edec84a46f3d.png"
+  },
+  {
+    "name": "Chicken Breast Fillet - Barbecue Marination 500g",
+    "desc": "Mazzraty Marinated Barbecue Breast Fillet is made from fresh premium quality chicken breast, marinated in a rich barbecue blend for a smoky and flavorful taste. Naturally rich in protein and ready to cook, it is perfect for grilling, wraps, sandwiches, and family meals.",
+    "price": "29.250",
+    "img": "/assets/images/products/684549406577a1ab.png"
+  },
+  {
+    "name": "Chicken Legs - Barbecue Marination 500g",
+    "desc": "Mazzraty Marinated Barbecue Legs are prepared from fresh quality chicken and coated in a rich barbecue marinade for a smoky and flavorful taste. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or enjoying in everyday family meals.",
+    "price": "11.500",
+    "img": "/assets/images/products/56205362ebc1ba9b.png"
+  },
+  {
+    "name": "Shish Tawouk - Barbecue Marination 500g",
+    "desc": "Mazzraty Marinated Barbecue Shish Tawook is made from fresh quality chicken breast, marinated in a rich barbecue blend for a smoky and flavorful taste. Naturally rich in protein and ready to cook, it is perfect for grilling, wraps, sandwiches, and family meals.",
+    "price": "27.750",
+    "img": "/assets/images/products/b4b7f408aadec921.png"
+  },
+  {
+    "name": "Chicken Drumsticks - Biryani Marination 500g",
+    "desc": "Mazzraty Marinated Biryani Drumsticks are prepared from fresh quality chicken and marinated with aromatic biryani spices for a rich and traditional flavor. Naturally rich in protein and ready to cook, they are ideal for preparing flavorful family meals with ease.",
+    "price": "14.250",
+    "img": "/assets/images/products/ed1ae07dcfc0f9ea.png"
+  },
+  {
+    "name": "Chicken Wings - Biryani Marination 500g",
+    "desc": "Mazzraty Marinated Biryani Wings are prepared from fresh quality chicken and marinated with aromatic biryani spices for a rich and traditional flavor. Naturally rich in protein and ready to cook, they are perfect for preparing flavorful meals with ease.",
+    "price": "11.000",
+    "img": "/assets/images/products/7e7dda183fd0fbc0.png"
+  },
+  {
+    "name": "Chicken Wings - Madhbi Marination 500g",
+    "desc": "Mazzraty Marinated Madhbi Wings are prepared from fresh quality chicken and marinated with authentic madhbi spices for a rich smoky flavor inspired by traditional cuisine. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or sharing with family and friends.",
+    "price": "11.000",
+    "img": "/assets/images/products/21fb68da81b99e92.png"
+  },
+  {
+    "name": "Chicken Breast Fillet - Spicy Marination 500g",
+    "desc": "Mazzraty Marinated Spicy Breast Fillet is made from fresh premium quality chicken breast, marinated with a bold blend of spices for a rich and spicy flavor. Naturally rich in protein and ready to cook, it is perfect for grilling, cooking, or flavorful everyday meals.",
+    "price": "29.250",
+    "img": "/assets/images/products/2e6d75f9f697e4e6.png"
+  },
+  {
+    "name": "Chicken Drumsticks - Spicy Marination 500g",
+    "desc": "Mazzraty Marinated Spicy Drumsticks are prepared from fresh quality chicken and marinated with a bold blend of spices for a rich and spicy flavor. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or preparing flavorful everyday meals.",
+    "price": "14.250",
+    "img": "/assets/images/products/bcf67738ace8e0cf.png"
+  },
+  {
+    "name": "Half Chicken - Spicy Marination 500g",
+    "desc": "Mazzraty Marinated Spicy Half Chicken is prepared from fresh quality chicken and marinated with a bold blend of spices for a rich and spicy flavor. Naturally rich in protein and ready to cook, it is perfect for grilling, roasting, or flavorful everyday meals.",
+    "price": "14.000",
+    "img": "/assets/images/products/659b861b76e28535.png"
+  },
+  {
+    "name": "Chicken Legs - Spicy Marination 500g",
+    "desc": "Mazzraty Marinated Spicy Legs are prepared from fresh quality chicken and marinated with a bold blend of spices for a rich and spicy flavor. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or preparing flavorful everyday meals.",
+    "price": "11.500",
+    "img": "/assets/images/products/998a5b3bb5804244.png"
+  },
+  {
+    "name": "Chicken Wings - Spicy Marination 500g",
+    "desc": "Mazzraty Marinated Spicy Wings are prepared from fresh quality chicken and marinated with a bold blend of spices for a rich and spicy flavor. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or preparing flavorful meals and snacks.",
+    "price": "11.000",
+    "img": "/assets/images/products/83b4480d7674f006.png"
+  },
+  {
+    "name": "Chicken Breast Fillet - Tandoori Marination 500g",
+    "desc": "Mazzraty Marinated Tandoori Breast Fillet is made from fresh premium quality chicken breast, carefully marinated with traditional tandoori spices for a rich and authentic flavor. Naturally rich in protein and ready to cook, it is perfect for grilling, cooking, or preparing flavorful everyday meals.",
+    "price": "29.250",
+    "img": "/assets/images/products/9725d7a022d69dc2.png"
+  },
+  {
+    "name": "Chicken Legs - Tandoori Marination 500g",
+    "desc": "Mazzraty Marinated Tandoori Legs are prepared from fresh quality chicken and marinated with a flavorful blend of traditional tandoori spices for a rich and authentic taste. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or preparing delicious everyday meals.",
+    "price": "11.500",
+    "img": "/assets/images/products/c2f478bb4ff61367.png"
+  },
+  {
+    "name": "Chicken Drumsticks - Tandoori Marination 500g",
+    "desc": "Mazzraty Marinated Tandoori Drumsticks are prepared from fresh quality chicken and marinated with a flavorful blend of traditional tandoori spices for a rich and authentic taste. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or preparing delicious everyday meals.",
+    "price": "14.250",
+    "img": "/assets/images/products/93ef0fb0967f9bbc.png"
+  },
+  {
+    "name": "Half Chicken - Tandoori Marination 500g",
+    "desc": "Mazzraty Marinated Tandoori Half Chicken is prepared from fresh quality chicken and marinated with traditional tandoori spices for a rich and authentic flavor. Naturally rich in protein and ready to cook, it is perfect for grilling, roasting, or preparing delicious family meals.",
+    "price": "14.000",
+    "img": "/assets/images/products/b0a4a2cc0f3eed50.png"
+  },
+  {
+    "name": "Shish Tawouk - Tandoori Marination 500g",
+    "desc": "Mazzraty Marinated Tandoori Shish Tawook is made from fresh quality chicken breast, carefully marinated with traditional tandoori spices for a rich and authentic flavor. Naturally rich in protein and ready to cook, it is perfect for grilling, barbecues, sandwiches, and everyday meals.",
+    "price": "27.750",
+    "img": "/assets/images/products/70d030c6b9655b53.png"
+  },
+  {
+    "name": "Chicken Wings - Tandoori Marination 500g",
+    "desc": "Mazzraty Marinated Tandoori Wings are prepared from fresh quality chicken and marinated with a flavorful blend of traditional tandoori spices for a rich and authentic taste. Naturally rich in protein and ready to cook, they are perfect for grilling, roasting, or sharing with family and friends.",
+    "price": "11.000",
+    "img": "/assets/images/products/d5596fe61eaf9ddf.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 800g",
+    "desc": "Mazzraty 800g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "18.000",
+    "img": "/assets/images/products/7d11a6bb00898616.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 900g",
+    "desc": "Mazzraty 900g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "20.250",
+    "img": "/assets/images/products/d3686bb3c96a408b.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 1100g",
+    "desc": "Mazzraty 1100g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "24.750",
+    "img": "/assets/images/products/ed94349197d7ea66.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 1200g",
+    "desc": "Mazzraty 1200g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "27.000",
+    "img": "/assets/images/products/8ad8c7f8bf4d83c2.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 1300g",
+    "desc": "Mazzraty 1300g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "29.000",
+    "img": "/assets/images/products/97a32529db9999fd.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 1400g",
+    "desc": "Mazzraty 1400g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "31.000",
+    "img": "/assets/images/products/48b9a5996c6edf44.png"
+  },
+  {
+    "name": "Fresh Baby Chicken 500g x2",
+    "desc": "Mazzraty Fresh Baby Chicken (500g x2) is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "24.000",
+    "img": "/assets/images/products/d217128b266786a2.png"
+  },
+  {
+    "name": "Fresh Baby Chicken 400g x2",
+    "desc": "Mazzraty Fresh Baby Chicken (400g x 2) is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "22.500",
+    "img": "/assets/images/products/c3fe73d3048c7729.png"
+  },
+  {
+    "name": "Chicken Breast Whole 500g",
+    "desc": "Mazzraty 500g Whole Chicken Breast is prepared from fresh quality chicken breast, offering tender meat and naturally rich flavor for healthy everyday meals. Rich in protein and naturally low in fat, it is perfect for grilling, roasting, pan-searing, or preparing a variety of wholesome recipes.",
+    "price": "15.000",
+    "img": "/assets/images/products/2aa94c3be73d9d62.png"
+  },
+  {
+    "name": "Fresh Free Range Whole Chicken 800g",
+    "desc": "Mazzraty 800g Fresh Free Range Whole Chicken is prepared from fresh quality free-range chicken, naturally raised with no added antibiotics for tender meat and rich flavor. Rich in high quality protein, Omega 3, and selenium, it is carefully packed for freshness and perfect for roasting, grilling, frying, or preparing wholesome everyday family meals.",
+    "price": "52.000",
+    "img": "/assets/images/products/b816ae625da69759.png"
+  },
+  {
+    "name": "Fresh Free Range Whole Chicken 900g",
+    "desc": "Mazzraty 900g Fresh Free Range Whole Chicken is prepared from fresh quality free-range chicken, naturally raised with no added antibiotics for tender meat and rich flavor. Rich in high quality protein, Omega 3, and selenium, it is carefully packed for freshness and perfect for roasting, grilling, frying, or preparing wholesome everyday family meals.",
+    "price": "58.500",
+    "img": "/assets/images/products/c00af4b7bb16893c.png"
+  },
+  {
+    "name": "Fresh Free Range Whole Chicken 1000g",
+    "desc": "Mazzraty 1000g Fresh Free Range Whole Chicken is prepared from fresh quality free-range chicken, naturally raised with no added antibiotics for tender meat and rich flavor. Rich in high quality protein, Omega 3, and selenium, it is carefully packed for freshness and perfect for roasting, grilling, frying, or preparing wholesome everyday family meals.",
+    "price": "65.000",
+    "img": "/assets/images/products/17b801e55832a21f.png"
+  },
+  {
+    "name": "Fresh Free Range Whole Chicken 1100g",
+    "desc": "Mazzraty 1100g Fresh Free Range Whole Chicken is prepared from fresh quality free-range chicken, naturally raised with no added antibiotics for tender meat and rich flavor. Rich in high quality protein, Omega 3, and selenium, it is carefully packed for freshness and perfect for roasting, grilling, frying, or preparing wholesome everyday family meals.",
+    "price": "71.500",
+    "img": "/assets/images/products/8f1ef65748999603.png"
+  },
+  {
+    "name": "Chicken Skin 1000g",
+    "desc": "MZ FRSH CHKN- Skin Grade A 1000g CB",
+    "price": "5.000",
+    "img": "/assets/images/products/51b596d4dd0e24c6.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 700g",
+    "desc": "Mazzraty 700g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "15.400",
+    "img": "/assets/images/products/22d438afda50f3fe.png"
+  },
+  {
+    "name": "Smoked Whole Chicken 1100g",
+    "desc": "Mazzraty 1100g Smoked Whole Chicken is fully cooked and ready-to-eat hot or cold. Prepared from fresh quality chicken and naturally wood-smoked for a rich smoky flavor and tender texture, it is naturally rich in protein and perfect for quick meals, sandwiches, salads, or convenient everyday enjoyment.",
+    "price": "37.050",
+    "img": "/assets/images/products/5ac57e2d83e5eebf.png"
+  },
+  {
+    "name": "Smoked Whole Chicken 800g",
+    "desc": "MZ SMKD CHKN- Whole Chicken 800g PPT",
+    "price": "27.550",
+    "img": "/assets/images/products/5b69b3cc52db624c.png"
+  },
+  {
+    "name": "Smoked Whole Chicken 1000g",
+    "desc": "Mazzraty 1000g Smoked Whole Chicken is fully cooked and ready-to-eat hot or cold. Prepared from fresh quality chicken and naturally wood-smoked for a rich smoky flavor and tender texture, it is naturally rich in protein and perfect for quick meals, sandwiches, salads, or convenient everyday enjoyment.",
+    "price": "34.200",
+    "img": "/assets/images/products/edd350ca76035a82.png"
+  },
+  {
+    "name": "Fresh Whole Chicken 1000g",
+    "desc": "Mazzraty 1000g Whole Chicken is prepared from fresh quality chicken, offering tender meat and rich flavor for wholesome family meals. Naturally rich in protein and carefully packed for freshness, it is perfect for roasting, grilling, frying, or preparing a variety of everyday recipes.",
+    "price": "25.000",
+    "img": "/assets/images/products/22d438afda50f3fe.png"
+  }
+]
